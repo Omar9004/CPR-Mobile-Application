@@ -1,14 +1,20 @@
-import React, { Component, useState,useEffect } from 'react';
+import React, { Component, useState,useEffect ,useRef} from 'react';
 import 'react-native-gesture-handler';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,StatusBar } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import {NavigationEvents} from 'react-navigation';
-import Alarm from '../Screens/Alarm2';
+
+import Alarm from '../Functions/Alarm';
+import Storage from'../Functions/Storage'
+import VF_VT2 from './VF_VT2';
+
+
 
 
 export default class VF_VT extends React.Component{
-  static navigationOptions = ({ navigation, navigationOptions }) => {
+ 
+   navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
     return {
@@ -20,23 +26,31 @@ export default class VF_VT extends React.Component{
       headerTintColor: navigationOptions.headerTintColor,
     };
   };
-    constructor(props){
-        super(props);
-          this.state={
-          Duration:1,
-          
-          };
-        }
-        
-     componentDidMount(){
-      this._unsubscribe = this.props.navigation.addListener("foucs",()=>this.setState({Duration:1})); 
-      } 
-      componentWillUnmount() {
-        this._unsubscribe();
-      }
+  constructor(props){
+    super(props);
+      this.state={
       
+      Duration:1,
     
-    render(){
+      };
+    }
+  componentDidMount(){
+    this.didBlurSubscription =this.props.navigation.addListener(
+      'didBlur  ',
+      payload =>{
+        this.state.Duration
+      }
+    )
+  }
+
+  componentWillUnmount(){
+   
+      this.didBlurSubscription.remove();
+    
+  }
+    
+    
+   render(){
         return( 
             <View style={styles.constainer}>
            
@@ -46,9 +60,10 @@ export default class VF_VT extends React.Component{
 
             <View style ={styles.timerView}>
             <Alarm duration={this.state.Duration} />
-            </View> 
             
-            <TouchableOpacity style={styles.appButtonContainer} title='Klar' onPress={() => {this.props.navigation.push('VF_VT2')}}>
+            </View> 
+            <Storage defibrillering='5'  Mediciner='adernaline' />
+            <TouchableOpacity style={styles.appButtonContainer} title='Klar' onPress={() => {{this.props.navigation.push('VF_VT2')}}}>
             <Text style={styles.appButtonText}>Klar</Text>
             
             
@@ -65,7 +80,7 @@ export default class VF_VT extends React.Component{
             
             </View>
         );
-    }
+  }
 }
 
 const styles = StyleSheet.create({

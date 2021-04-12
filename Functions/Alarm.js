@@ -83,7 +83,7 @@ class Alarm extends React.Component{
 
                         </View>
             )
-            }
+             }
             }
 
         async componentDidMount(){

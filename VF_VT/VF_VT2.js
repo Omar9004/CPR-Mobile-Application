@@ -3,11 +3,13 @@ import 'react-native-gesture-handler';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
-import Alarm from '../Screens/Alarm2';
-
+import {useNavigation ,useRoute} from '@react-navigation/native'
+import Alarm from '../Functions/Alarm';
+import VF_VT from './VF_VT';
 
 export default class VF_VT2 extends React.Component{
-  static navigationOptions = ({ navigation, navigationOptions }) => {
+
+   navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
     return {
@@ -20,7 +22,7 @@ export default class VF_VT2 extends React.Component{
     };
   };
 
-   constructor(props){
+  constructor(props){
          super(props);
            this.state={
            
@@ -29,7 +31,7 @@ export default class VF_VT2 extends React.Component{
            };
          }  
          
-     render(){
+    render(){
       
         return( 
              <View style={styles.constainer}>
@@ -53,7 +55,7 @@ export default class VF_VT2 extends React.Component{
              </TouchableOpacity>
              </View>
          );
-     }
+    }
    }
    
    const styles = StyleSheet.create({

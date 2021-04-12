@@ -3,7 +3,7 @@ import React, { Component} from 'react';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
-import Alarm from './Alarm2';
+import Alarm from '../Functions/Alarm';
 
 export default class Screen2 extends React.Component{
   static navigationOptions = ({ navigation, navigationOptions }) => {
