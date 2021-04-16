@@ -1,11 +1,11 @@
-import React, { Component,useState } from 'react';
+import React, { Component} from 'react';
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-//import React1, { useState } from 'react';
+
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,SafeAreaView } from 'react-native';
-import {createAppContainer}from 'react-navigation';
-import {createStackNavigator}from 'react-navigation-stack';
-//const [x, setCount]= useState(0); 
+
+import Timer from '../Functions/Timer';
+
 export default class Options extends Component{
     render(){
         return(
@@ -15,7 +15,8 @@ export default class Options extends Component{
             <TouchableOpacity style = {styles.appButtonContainer}
             
             title="VF/VT"
-            onPress={() => this.props.navigation.navigate('VF_VT')}
+            onPress={() => this.props.navigation.navigate('VF_VT',
+           )}
             
             
           >
@@ -25,13 +26,13 @@ export default class Options extends Component{
           <TouchableOpacity style = {styles.appButtonContainer2}
             
            
-            onPress={() => this.props.navigation.navigate('Screen1')}
+            onPress={() => this.props.navigation.navigate('AsystoliStart')}
             
             
           >
              <Text style={styles.appButtonText}>Asystoli</Text>
           </TouchableOpacity>
-         
+        
           
         </View>
         

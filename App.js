@@ -8,8 +8,10 @@ import Options from './Screens/Options';
 import VF_VT from './VF_VT/VF_VT';
 import  VF_VT2 from './VF_VT/VF_VT2';
 
+
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
+import {createSwitchNavigator}from 'react-navigation';
 //import Screen2 from './Screens/Screen2';
 
 
@@ -24,6 +26,16 @@ export default class App extends React.Component{
   } 
   
 }
+const AppSwitherVF = createSwitchNavigator({
+  VF_VT:{
+    screen:VF_VT
+  },
+  VF_VT2:{
+    screen:VF_VT2
+  }
+},{
+  initialRouteName: "VF_VT"
+})
 const AppNavigator = createStackNavigator({
   Home:{
     screen:Screen2,
@@ -32,17 +44,12 @@ const AppNavigator = createStackNavigator({
   Options:{ 
     screen:Options
   },
- 
+
   Screen1:{
     screen:Screen1
   },
-  VF_VT:{
-    screen:VF_VT
-  },
-  VF_VT2:{
-    screen:VF_VT2
-  }
-
+  VF:AppSwitherVF
+  
     
 },
 {

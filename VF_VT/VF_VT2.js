@@ -6,7 +6,9 @@ import {createStackNavigator}from 'react-navigation-stack';
 import {useNavigation ,useRoute} from '@react-navigation/native'
 import Alarm from '../Functions/Alarm';
 import VF_VT from './VF_VT';
+import Timer from '../Functions/Timer';
 
+var parses=0;
 export default class VF_VT2 extends React.Component{
 
    navigationOptions = ({ navigation, navigationOptions }) => {
@@ -30,16 +32,44 @@ export default class VF_VT2 extends React.Component{
          
            };
          }  
+
+         
+  getData=async()=>{
+        
+          try{
+              
+              
+              const value = await AsyncStorage.getItem('time');
+              
+             parses= JSON.stringify(value);
+             // const Mediciner = await AsyncStorage.getItem('def');
+              if(parses !== null){
+                 console.log(parses)
+                 
+                  
+              }
+              /*if(Mediciner !== null){
+                  this.setState({def:Mediciner})
+              }*/
+          }catch(e){
+              console.log("Empty");
+          }
+      }
+      
          
     render(){
-      
+      const {navigation } =this.props;
+      this.getData();
         return( 
              <View style={styles.constainer}>
    
              <Text style={styles.textarea_style}> Defibrillering {"\n"}
-                   x+1
+             sec={parses.sec},
+              min={navigation.getParam('min','NO-ID')},
+              h={navigation.getParam('hh','NO-ID')}
               </Text>
-   
+             <Timer>sec={navigation.getParam('sec')} min={navigation.getParam('min')}
+             hh={navigation.getParam('h')}</Timer>
              <View style ={styles.timerView}>
              <Alarm duration ={this.state.Duration} />
              </View>
@@ -47,9 +77,9 @@ export default class VF_VT2 extends React.Component{
              <Text style={styles.appButtonText}>Klar</Text>
              
              </TouchableOpacity>
-             <TouchableOpacity style={styles.appButtonContainer2}title='Avsluta'
-             onPress={() => this.props.navigation.navigate('Home')}
-             >
+             <TouchableOpacity style={styles.appButtonContainer2} title='Avsluta'
+            onPress={() => this.props.navigation.popToTop()}
+            >
              <Text style={styles.appButtonText}>Avsluta</Text>
              
              </TouchableOpacity>

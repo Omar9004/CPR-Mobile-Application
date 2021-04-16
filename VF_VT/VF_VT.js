@@ -4,14 +4,17 @@ import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextI
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import {NavigationEvents} from 'react-navigation';
-
+import Timer from '../Functions/Timer';
 import Alarm from '../Functions/Alarm';
 import Storage from'../Functions/Storage'
 import VF_VT2 from './VF_VT2';
+import {secKey} from '../Functions/Timer';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 
-
+var parses=0;
 export default class VF_VT extends React.Component{
  
    navigationOptions = ({ navigation, navigationOptions }) => {
@@ -28,42 +31,91 @@ export default class VF_VT extends React.Component{
   };
   constructor(props){
     super(props);
+      
       this.state={
       
-      Duration:1,
+      sec:0,
+      min:0,
+      h:0
     
       };
     }
-  componentDidMount(){
-    this.didBlurSubscription =this.props.navigation.addListener(
-      'didBlur  ',
-      payload =>{
-        this.state.Duration
-      }
-    )
-  }
+    
 
-  componentWillUnmount(){
-   
-      this.didBlurSubscription.remove();
-    
+ /*  async  componentDidMount() {
+       this.getData();
+       //console.log(secKey)
+     /* try{  
+        const secValue = await AsyncStorage.getItem(secKey);
+        //let parses = JSON.stringify(secValue);
+        if(secValue!==null){
+          console.log(secValue)
+        }
+      }catch(e){
+        console.log(empty)
+      }
+    }*/
+  
+    AlertButton=()=>{
+      
+      Alert.alert(
+        "Alert Title",
+        "My Alert Msg",
+        [
+          {
+            text: "Avbryt",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => {this.props.navigation.navigate('VF_VT2',{sec:parses.sec, min:parses.min, hh:parses.hh})}}
+        ]
+      );
+    }
+   /* componentDidMount(){
+      this.getData();
+    }*/
+   componentWillUnmount(){
+      this.getData();
+    }
+    getData=async()=>{
+        
+      try{
+          
+          
+          const value = await AsyncStorage.getItem(secKey);
+          
+         parses= JSON.stringify(value);
+         // const Mediciner = await AsyncStorage.getItem('def');
+          if(parses !== null){
+             console.log(parses)
+             
+              
+          }
+          /*if(Mediciner !== null){
+              this.setState({def:Mediciner})
+          }*/
+      }catch(e){
+          console.log("Empty");
+      }
   }
-    
+  
     
    render(){
+    
         return( 
             <View style={styles.constainer}>
-           
+              
             <Text style={styles.textarea_style}>3:de defibrillering {"\n"}
-                1mg adrenalin
+                1mg adrenalin 
              </Text>
-
-            <View style ={styles.timerView}>
-            <Alarm duration={this.state.Duration} />
+            <Timer sec={this.state.sec}min={this.state.min}h={this.state.h} />
             
+            <View style ={styles.timerView}>
+            <Alarm duration={1} />
+
             </View> 
             <Storage defibrillering='5'  Mediciner='adernaline' />
-            <TouchableOpacity style={styles.appButtonContainer} title='Klar' onPress={() => {{this.props.navigation.push('VF_VT2')}}}>
+            <TouchableOpacity style={styles.appButtonContainer} title='Klar' onPress={() => {this.AlertButton()}}>
             <Text style={styles.appButtonText}>Klar</Text>
             
             
@@ -79,6 +131,8 @@ export default class VF_VT extends React.Component{
             </TouchableOpacity>
             
             </View>
+            
+            
         );
   }
 }
