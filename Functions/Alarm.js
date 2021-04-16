@@ -6,13 +6,12 @@ import { Audio } from 'expo-av';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import VF_VT from '../VF_VT/VF_VT';
 
 
 
 const repeat =[1*1000,2*1000];
 const sound = new Audio.Sound();
-var sess;
+
 class Alarm extends React.Component{
    
         constructor(props){
@@ -142,7 +141,7 @@ class Alarm extends React.Component{
         
         
         render(){
-            sess = this.state.sec;
+           
         
     return(
         this.main()

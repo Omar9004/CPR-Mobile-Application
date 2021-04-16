@@ -7,7 +7,7 @@ import Screen1 from './Screens/Screen1';
 import Options from './Screens/Options';
 import VF_VT from './VF_VT/VF_VT';
 import  VF_VT2 from './VF_VT/VF_VT2';
-
+import CPR_Start from './Screens/CPR_Start';
 
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
@@ -43,6 +43,9 @@ const AppNavigator = createStackNavigator({
   },
   Options:{ 
     screen:Options
+  },
+  CPR_Start:{
+    screen:CPR_Start
   },
 
   Screen1:{

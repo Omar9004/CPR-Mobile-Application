@@ -6,6 +6,7 @@ import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
 
 export default class Screen2 extends React.Component{
+ 
   static navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
@@ -35,7 +36,7 @@ export default class Screen2 extends React.Component{
               <TouchableOpacity style = {styles.ButtonStyle}
               
               title="Start"
-              onPress={() => this.props.navigation.navigate('Options')}
+              onPress={() => this.props.navigation.navigate('CPR_Start')}
               
               
             >

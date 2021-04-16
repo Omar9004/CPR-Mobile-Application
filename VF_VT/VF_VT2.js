@@ -1,14 +1,13 @@
-import React, { Component, useState,useEffect } from 'react';
 import 'react-native-gesture-handler';
+import React, { Component} from 'react';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
-import {useNavigation ,useRoute} from '@react-navigation/native'
 import Alarm from '../Functions/Alarm';
 import VF_VT from './VF_VT';
 import Timer from '../Functions/Timer';
 
-var parses=0;
+//var parses=0;
 export default class VF_VT2 extends React.Component{
 
    navigationOptions = ({ navigation, navigationOptions }) => {
@@ -34,7 +33,7 @@ export default class VF_VT2 extends React.Component{
          }  
 
          
-  getData=async()=>{
+  /*getData=async()=>{
         
           try{
               
@@ -50,26 +49,25 @@ export default class VF_VT2 extends React.Component{
               }
               /*if(Mediciner !== null){
                   this.setState({def:Mediciner})
-              }*/
+              }
           }catch(e){
               console.log("Empty");
           }
-      }
+      }*/
       
          
     render(){
       const {navigation } =this.props;
-      this.getData();
+  
         return( 
              <View style={styles.constainer}>
    
              <Text style={styles.textarea_style}> Defibrillering {"\n"}
-             sec={parses.sec},
-              min={navigation.getParam('min','NO-ID')},
-              h={navigation.getParam('hh','NO-ID')}
+             sec={JSON.stringify(navigation.getParam('sec','NO-ID'))},
+              min={0},
+              h={0}
               </Text>
-             <Timer>sec={navigation.getParam('sec')} min={navigation.getParam('min')}
-             hh={navigation.getParam('h')}</Timer>
+            
              <View style ={styles.timerView}>
              <Alarm duration ={this.state.Duration} />
              </View>

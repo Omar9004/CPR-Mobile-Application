@@ -3,7 +3,7 @@ import React, { Component, useState,useEffect } from 'react';
 import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { color } from 'react-native-reanimated';
-var sess;
+
 class Timer extends React.Component{
    
         constructor(props){
@@ -18,11 +18,11 @@ class Timer extends React.Component{
         }
         inputData=async()=>{
           try{
-          if(this.state.sec>0){
-          let time = {sec:this.state.sec, min:this.state.min, hh:this.state.h};
+          //console.log(this.state.sec)
+          let time = {'sec':this.state.sec};
          // sess = this.state.sec;
-          await AsyncStorage.setItem('time',JSON.stringify(time))
-          }
+          await AsyncStorage.setItem('tid',JSON.stringify(time))
+         
           //await AsyncStorage.multiSet([['def',this.state.def],['def',this.state.med]])
           }catch(err){
               console.log(error);
@@ -76,18 +76,18 @@ class Timer extends React.Component{
            
             }
 
-        async componentDidMount(){
+         componentDidMount(){
             this.timeDivider()
-            this.inputData();
+           
            
          }
 
             
         
         
-        componentWillUnmount(){
+          componentWillUnmount(){
            clearInterval(this.interval);
-           this.inputData()
+           //this.inputData()
             
         }
 
@@ -95,7 +95,7 @@ class Timer extends React.Component{
         
         
         render(){
-          
+          this.inputData();
          // this.getData();
     return(
         this.main()
@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
   
 
 export default Timer;
-export const secKey= 'time';
+export const secKey= 'tid';

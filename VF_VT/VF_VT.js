@@ -1,9 +1,8 @@
-import React, { Component, useState,useEffect ,useRef} from 'react';
+import React, { Component} from 'react';
 import 'react-native-gesture-handler';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,StatusBar } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
-import {NavigationEvents} from 'react-navigation';
 import Timer from '../Functions/Timer';
 import Alarm from '../Functions/Alarm';
 import Storage from'../Functions/Storage'
@@ -42,19 +41,6 @@ export default class VF_VT extends React.Component{
     }
     
 
- /*  async  componentDidMount() {
-       this.getData();
-       //console.log(secKey)
-     /* try{  
-        const secValue = await AsyncStorage.getItem(secKey);
-        //let parses = JSON.stringify(secValue);
-        if(secValue!==null){
-          console.log(secValue)
-        }
-      }catch(e){
-        console.log(empty)
-      }
-    }*/
   
     AlertButton=()=>{
       
@@ -67,16 +53,17 @@ export default class VF_VT extends React.Component{
             onPress: () => console.log("Cancel Pressed"),
             style: "cancel"
           },
-          { text: "OK", onPress: () => {this.props.navigation.navigate('VF_VT2',{sec:parses.sec, min:parses.min, hh:parses.hh})}}
+          { text: "OK", onPress: () => {this.props.navigation.navigate('VF_VT2',{sec:parses.sec})}}
         ]
       );
     }
    /* componentDidMount(){
       this.getData();
     }*/
-   componentWillUnmount(){
-      this.getData();
+     componentWillUnmount(){
+     this.getData();
     }
+    
     getData=async()=>{
         
       try{
@@ -84,10 +71,10 @@ export default class VF_VT extends React.Component{
           
           const value = await AsyncStorage.getItem(secKey);
           
-         parses= JSON.stringify(value);
+         parses= value;
          // const Mediciner = await AsyncStorage.getItem('def');
           if(parses !== null){
-             console.log(parses)
+            console.log(parses)
              
               
           }
@@ -98,6 +85,7 @@ export default class VF_VT extends React.Component{
           console.log("Empty");
       }
   }
+   
   
     
    render(){
