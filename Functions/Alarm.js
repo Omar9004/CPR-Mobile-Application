@@ -1,11 +1,12 @@
 import React, { Component, useState,useEffect } from 'react';
 
-import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration} from "react-native";
+import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration,ProgressBarAndroidBase} from "react-native";
 import CountDown from 'react-native-countdown-component';
 import { Audio } from 'expo-av';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+
 
 
 
@@ -62,7 +63,7 @@ class Alarm extends React.Component{
                 <View style={styles.timerAlarm}> 
                 {this.playSound()}
                 
-                <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec}</Text>
+                <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
                 
                
                 </View>
@@ -72,7 +73,7 @@ class Alarm extends React.Component{
                        
                         
                         <View style={styles.timerView}> 
-                        
+                       
                         <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec}</Text>
                         
 
@@ -82,8 +83,8 @@ class Alarm extends React.Component{
                 }
             }else{return(
                 <View style={styles.timerAlarm}> 
-                 
-                        <Text style={styles.textStyle}>0{this.state.dur}:0{this.state.sec}</Text>
+                        
+                        <Text style={styles.textStyle}>{this.state.dur}:{this.state.sec}</Text>
                         {Vibration.vibrate(repeat,true),Alert.alert('Alert','Tiden är slut flytta till nästa steg',[{text:'OK',onPress:()=>{Vibration.cancel()}}])}  
 
                         </View>
@@ -134,6 +135,7 @@ class Alarm extends React.Component{
         
         
         componentWillUnmount(){
+            
             clearInterval(this.interval);
         }
 
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
         right:0,
         bottom:0,
         width: 88,
-        height: 50,
+        height: 50, 
         borderRadius: 10,
         backgroundColor:'#004dcf',
         justifyContent: "center",
@@ -224,6 +226,13 @@ const styles = StyleSheet.create({
         //paddingHorizontal: 12,
         
     },
+    ProgressBar:{
+        top: 100,
+        left: 5,
+        width: 200,
+        height: 6, 
+        color:"blue",
+    }
   });
   
 

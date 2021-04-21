@@ -4,7 +4,6 @@ import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextI
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
-import VF_VT from './VF_VT';
 import Timer from '../Functions/Timer';
 
 //var parses=0;
@@ -54,14 +53,16 @@ export default class VF_VT2 extends React.Component{
               console.log("Empty");
           }
       }*/
-      
+   
          
     render(){
       const {navigation } =this.props;
-  
+      let time = JSON.stringify(navigation.getParam('time','NO-ID'));
+      time= JSON.parse(time);
+      
         return( 
              <View style={styles.constainer}>
-   
+             <Timer sec={time["sec"]} min={time["min"]} h={time["hh"]}/>
              <Text style={styles.textarea_style}> Defibrillering {"\n"}
              sec={JSON.stringify(navigation.getParam('sec','NO-ID'))},
               min={0},

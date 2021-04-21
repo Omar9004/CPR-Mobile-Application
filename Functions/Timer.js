@@ -1,9 +1,9 @@
 import React, { Component, useState,useEffect } from 'react';
 
-import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration} from "react-native";
+import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration, TouchableHighlightBase} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { color } from 'react-native-reanimated';
-
+var time1=0;
 class Timer extends React.Component{
    
         constructor(props){
@@ -19,9 +19,11 @@ class Timer extends React.Component{
         inputData=async()=>{
           try{
           //console.log(this.state.sec)
-          let time = {'sec':this.state.sec};
+          let time = {'sec':this.state.sec,'min':this.state.min, 'hh':this.state.h};
+          time1 = this.state.sec;
          // sess = this.state.sec;
           await AsyncStorage.setItem('tid',JSON.stringify(time))
+          
          
           //await AsyncStorage.multiSet([['def',this.state.def],['def',this.state.med]])
           }catch(err){
@@ -37,15 +39,7 @@ class Timer extends React.Component{
             const value = await AsyncStorage.getItem(secKey);
             
             let pasres= JSON.parse(value);
-           // const Mediciner = await AsyncStorage.getItem('def');
-            if(pasres !== null){
-               console.log(pasres)
-               
-                
-            }
-            /*if(Mediciner !== null){
-                this.setState({def:Mediciner})
-            }*/
+           
         }catch(e){
             console.log("Empty");
         }
@@ -87,8 +81,9 @@ class Timer extends React.Component{
         
           componentWillUnmount(){
            clearInterval(this.interval);
-           //this.inputData()
-            
+           
+           //this.getData()
+          
         }
 
       
@@ -96,7 +91,7 @@ class Timer extends React.Component{
         
         render(){
           this.inputData();
-         // this.getData();
+         //this.getData();
     return(
         this.main()
         
@@ -139,7 +134,7 @@ const styles = StyleSheet.create({
         
       },*/
       timerView:{
-        position: 'absolute',
+       // position: 'absolute',
         top: -230,
         left: 100,
         right:0,
@@ -151,7 +146,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
       },
       timerAlarm:{
-        position: 'absolute',
+        //position: 'absolute',
         top: 100,
         left: 5,
         width: 88,
@@ -183,3 +178,5 @@ const styles = StyleSheet.create({
 
 export default Timer;
 export const secKey= 'tid';
+export const secKey1= 'tid';
+export const time =time1;

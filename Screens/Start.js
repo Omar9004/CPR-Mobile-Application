@@ -5,20 +5,20 @@ import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
 
-export default class Screen2 extends React.Component{
+export default class Start extends React.Component{
  
-  static navigationOptions = ({ navigation, navigationOptions }) => {
+  /*static navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
 
     return {
       title: params ? params.otherParam : 'Home',
-      /* These values are used instead of the shared configuration! */
+      /* These values are used instead of the shared configuration! 
       headerStyle: {
         backgroundColor: navigationOptions.headerStyle.backgroundColor,
       },
       headerTintColor: navigationOptions.headerTintColor,
     };
-  };
+  };*/
   constructor(props){
     super(props);
       this.state={
