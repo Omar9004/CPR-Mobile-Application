@@ -5,11 +5,18 @@ import { StatusBar } from 'expo-status-bar';
 import { Alert, StyleSheet, TouchableOpacity, Text, View, Touchable, Button, TextInput, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Timer from '../Functions/Timer';
-import {secKey} from '../Functions/Timer';
+import { getTime} from '../Functions/Timer';
 import { ThemeProvider } from '@react-navigation/native';
-//import {secKey} from '../Functions/Timer';
-//import {secKey1} from '../Functions/Timer';
-var parses = 0;
+import {
+  test,
+  dateToString,
+  storeData,
+  storeArray,
+  getData,
+  getArray,
+  DefaultContainer,
+} from "../Functions/functionContainer";
+var times = 0;
 export default class Options extends Component {
   navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
@@ -24,38 +31,23 @@ export default class Options extends Component {
     };
   };
 
-  move = async () => {
-   await this.getData();
-  }
-  getData = async () => {
 
-    try {
-       const value = await AsyncStorage.getItem(secKey);
-
-      parses = JSON.parse(value);
-      //console.log(parses)
-
-    } catch (e) {
-      console.log("Empty");
-    }
-  }
   render() {
-      const {navigation } =this.props;
-      let timer = JSON.stringify(navigation.getParam('time','NO-ID'));
-      timer= JSON.parse(timer);
-      
+    times= getTime()
+    times = JSON.parse(times)
     return (
       
       <View style={styles.constainer}>
         
-        <Timer  sec={timer["sec"]} min={timer["min"]} h={timer["hh"]} >
+        <Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} >
         
         </Timer>
         
         <TouchableOpacity style={styles.appButtonContainer}
         
           title="VF/VT"
-          onPress={async() => {await this.move(),this.props.navigation.navigate('VF_VT',{time:parses})}}
+          onPress={() => {this.props.navigation.navigate('VF_VT')& test.push({event:'VF/VT slingan',date :dateToString()})&
+          storeArray('Events',test)}}
 
 
         >
@@ -65,12 +57,25 @@ export default class Options extends Component {
         <TouchableOpacity style={styles.appButtonContainer2}
 
 
-          onPress={async() => {await this.move(), this.props.navigation.navigate('Asystoli', { time: parses }) }}
+          onPress={() => {this.props.navigation.navigate('Asystoli')& test.push({event:'Asystoli slingan',date :dateToString()})&
+          storeArray('Events',test)}}
 
 
         >
           <Text style={styles.appButtonText}>Asystoli</Text>
         </TouchableOpacity>
+           
+        <TouchableOpacity style = {styles.ButtonStyle2}
+              
+              title="Summary"
+              onPress={() => this.props.navigation.navigate('Summary')}
+              
+              
+            >
+              
+              
+               <Text style={styles.SummaryButtonText}>Summary</Text>
+            </TouchableOpacity>
 
 
       </View>
@@ -103,6 +108,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase"
+  },
+  SummaryButtonText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
+    
+  },
+  ButtonStyle2:{
+    //position: 'absolute',
+    top: "-130%",
+    left: 250,
+    width: "25%",
+    height: 50,
+    
+    backgroundColor:'blue',
+    justifyContent: 'center',
+    //alignSelf: "center"
   },
   appButtonContainer2: {
     top: 0,

@@ -4,10 +4,12 @@ import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextI
 
 import Start from './Screens/Start';
 import Options from './Screens/Options';
-import VF_VT from './VF_VT/VF_VT';
-import  VF_VT2 from './VF_VT/VF_VT2';
+import VF_VT from './Screens/VF_VT';
 import CPR_Start from './Screens/CPR_Start';
 import Asystoli from './Screens/Asystoli';
+import Summary from './Screens/Summary';
+import Details from './Screens/Details';
+
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import {createSwitchNavigator}from 'react-navigation';
@@ -29,9 +31,7 @@ const AppSwitherVF = createSwitchNavigator({
   VF_VT:{
     screen:VF_VT
   },
-  VF_VT2:{
-    screen:VF_VT2
-  },
+ 
   Asystoli:{
     screen:Asystoli,
   },
@@ -44,6 +44,7 @@ const AppSwitherVF = createSwitchNavigator({
   initialRouteName: "Options",
   defaultNavigationOptions: {
     gestureEnabled:false,
+    
     headerStyle: {
       backgroundColor: '#8ed1fc',
     },
@@ -55,11 +56,19 @@ const AppSwitherVF = createSwitchNavigator({
   }
 
 })
-/*const AppSwitherAS = createSwitchNavigator({
-    Asystoli:{
-    screen:Asystoli,
+const SummaryStack = createSwitchNavigator({
+  Summary:{
+    screen:Summary,
   },
-})*/
+  Details:{
+    screen:Details
+  },
+  
+},{
+  defaultNavigationOptions: {
+  headerShown:false,
+  gestureEnabled:false,}
+});
 const AppNavigator = createStackNavigator({
   Home:{
     screen:Start,
@@ -69,16 +78,23 @@ const AppNavigator = createStackNavigator({
   CPR_Start:{
     screen:CPR_Start
   },
+  Summary:{
+    screen:Summary,
+  },
+  Details:{
+    screen:Details
+  },
 
   
   VF:AppSwitherVF,
- // Asystoli:AppSwitherAS,
+  //Summary:SummaryStack,
   
     
 },
 {
   initialRouteName: "Home",
   defaultNavigationOptions: {
+    headerShown:false,
     gestureEnabled:false,
     headerStyle: {
       backgroundColor: '#8ed1fc',

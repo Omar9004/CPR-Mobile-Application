@@ -3,7 +3,7 @@ import React, { Component, useState,useEffect } from 'react';
 import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration, TouchableHighlightBase} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { color } from 'react-native-reanimated';
-var time1=0;
+var time=0;
 class Timer extends React.Component{
    
         constructor(props){
@@ -16,11 +16,13 @@ class Timer extends React.Component{
                 
             }
         }
-        inputData=async()=>{
+
+      
+       /* inputData=async()=>{
           try{
           //console.log(this.state.sec)
-          let time = {'sec':this.state.sec,'min':this.state.min, 'hh':this.state.h};
-          time1 = this.state.sec;
+           
+      
          // sess = this.state.sec;
           await AsyncStorage.setItem('tid',JSON.stringify(time))
           
@@ -31,29 +33,14 @@ class Timer extends React.Component{
           }
           
       }
-      getData=async()=>{
-        
-        try{
-            
-            
-            const value = await AsyncStorage.getItem(secKey);
-            
-            let pasres= JSON.parse(value);
-           
-        }catch(e){
-            console.log("Empty");
-        }
-    }
-       
-        
-        
+     */
         timeDivider=()=>{
             this.interval= setInterval(
                         (()=>{
                            
-                            const seconds = this.state.sec >=59 ? this.setState({sec:this.state.sec=0}): this.setState({sec:this.state.sec+1})
-                            const minutes =  this.state.sec ==0 ?this.setState({min:this.state.min+1}): this.setState({min:((this.state.min>59?this.state({min:this.state.min=0}):this.state.min))})
-                            const hours = (this.state.min==0)&&(this.state.sec==0) ?this.setState({h:this.state.h+1}): this.setState({h:this.state.h})
+                          const seconds = this.state.sec >=59 ? this.setState({sec:this.state.sec=0}): this.setState({sec:this.state.sec+1})
+                          const minutes =  this.state.sec ==0 ?this.setState({min:this.state.min+1}): this.setState({min:((this.state.min>59?this.state({min:this.state.min=0}):this.state.min))})
+                          const hours = (this.state.min==0)&&(this.state.sec==0) ?this.setState({h:this.state.h+1}): this.setState({h:this.state.h})
                           
                         }),1000);            
             
@@ -76,9 +63,6 @@ class Timer extends React.Component{
            
          }
 
-            
-        
-        
           componentWillUnmount(){
            clearInterval(this.interval);
            
@@ -86,11 +70,9 @@ class Timer extends React.Component{
           
         }
 
-      
-        
-        
         render(){
-          this.inputData();
+          time = {'sec':this.state.sec,'min':this.state.min, 'hh':this.state.h};
+          
          //this.getData();
     return(
         this.main()
@@ -98,6 +80,9 @@ class Timer extends React.Component{
         
      );
     }
+}
+export function  getTime(){
+  return JSON.stringify(time);
 }
 
 
@@ -175,8 +160,6 @@ const styles = StyleSheet.create({
     },
   });
   
+  
 
 export default Timer;
-export const secKey= 'tid';
-export const secKey1= 'tid';
-export const time =time1;

@@ -4,6 +4,16 @@ import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextI
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
+import {
+  test,
+  dateToString,
+  storeData,
+  storeArray,
+  getData,
+  getArray,
+  DefaultContainer,
+} from "../Functions/functionContainer";
+
 
 export default class Start extends React.Component{
  
@@ -36,7 +46,10 @@ export default class Start extends React.Component{
               <TouchableOpacity style = {styles.ButtonStyle}
               
               title="Start"
-              onPress={() => this.props.navigation.navigate('CPR_Start')}
+              onPress={() => this.props.navigation.navigate('CPR_Start')&
+              test.push({event:'HLR börjar',date :dateToString()})&
+              storeArray('Events',test)
+            }
               
               
             >
@@ -44,6 +57,20 @@ export default class Start extends React.Component{
               
                <Text style={styles.appButtonText}>Start</Text>
             </TouchableOpacity>
+
+            
+            <TouchableOpacity style = {styles.ButtonStyle2}
+              
+              title="Summary"
+              onPress={() => this.props.navigation.navigate('Summary')}
+              
+              
+            >
+              
+              
+               <Text style={styles.SummaryButtonText}>Summary</Text>
+            </TouchableOpacity>
+            
             
            </View>
         
@@ -63,6 +90,14 @@ const styles = StyleSheet.create({
     textTransform: "uppercase"
     
   },
+  SummaryButtonText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
+    
+  },
   ButtonStyle:{
     position: 'absolute',
    /* top: 100,
@@ -73,6 +108,17 @@ const styles = StyleSheet.create({
     backgroundColor:'blue',
     justifyContent: 'center',
     alignSelf: "center"
+  },
+  ButtonStyle2:{
+    position: 'absolute',
+    top: "10%",
+    left: 250,
+    width: "25%",
+    height: 50,
+    
+    backgroundColor:'blue',
+    justifyContent: 'center',
+    //alignSelf: "center"
   },
   timerView:{
     position: 'absolute',

@@ -3,7 +3,16 @@ import React, { Component} from 'react';
 import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,SafeAreaView,Pressable } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Timer from '../Functions/Timer';
-import {secKey} from '../Functions/Timer';
+import {
+  test,
+  dateToString,
+  storeData,
+  storeArray,
+  getData,
+  getArray,
+  DefaultContainer,
+} from "../Functions/functionContainer";
+
 var parses = 0;
 export default class CPR_Start extends Component{
   constructor(props){
@@ -17,7 +26,7 @@ export default class CPR_Start extends Component{
       };
     }
    
-  getData=async()=>{
+  /*getData=async()=>{
         
     try{
       const value = await AsyncStorage.getItem(secKey);
@@ -32,7 +41,8 @@ export default class CPR_Start extends Component{
 move = async () => {
    await this.getData();
   
-}
+  
+}*/
 
 
   
@@ -51,7 +61,8 @@ move = async () => {
               },
               this.state.pressed?styles.appButtonDisabled:styles.appButtonContainer
             ]}
-            onPress={() =>  {this.setState({pressed:true})}}
+            onPress={() =>  {this.setState({pressed:true})& test.push({event:'Hjärtkompresstioner',date :dateToString()})&
+            storeArray('Events',test)}}
             
             
           >
@@ -73,7 +84,8 @@ move = async () => {
           <Pressable style = {this.state.klar_flag?styles.klarButtonDisabled:styles.Bottom_Button}
             disabled={this.state.klar_flag}
            
-            onPress={async() => { await this.move(),this.props.navigation.navigate('Options',{time:parses})}}
+            onPress={() => {this.props.navigation.navigate('Options')& test.push({event:'Analys',date :dateToString()})&
+            storeArray('Events',test)}}
             
             
           >
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
       },
     appButtonContainer: {
     
-    top: -150,
+    top: -100,
     left: 50,
     width: 300,
     height: 100,
@@ -125,7 +137,7 @@ const styles = StyleSheet.create({
         
     },
     appButtonDisabled:{
-    top: -150,
+    top: -100,
     left: 50,
     width: 300,
     height: 100,

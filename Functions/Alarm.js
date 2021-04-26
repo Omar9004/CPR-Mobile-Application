@@ -12,7 +12,7 @@ import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const repeat =[1*1000,2*1000];
 const sound = new Audio.Sound();
-
+var AlarmTime= 0;
 class Alarm extends React.Component{
    
         constructor(props){
@@ -50,8 +50,7 @@ class Alarm extends React.Component{
 
                         }),1000);            
             
-                        
-
+                  
             
         }
         main=()=>{
@@ -74,7 +73,7 @@ class Alarm extends React.Component{
                         
                         <View style={styles.timerView}> 
                        
-                        <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec}</Text>
+                        <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
                         
 
                         </View>
@@ -84,12 +83,13 @@ class Alarm extends React.Component{
             }else{return(
                 <View style={styles.timerAlarm}> 
                         
-                        <Text style={styles.textStyle}>{this.state.dur}:{this.state.sec}</Text>
-                        {Vibration.vibrate(repeat,true),Alert.alert('Alert','Tiden är slut flytta till nästa steg',[{text:'OK',onPress:()=>{Vibration.cancel()}}])}  
+                        <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
+                        {Vibration.vibrate(repeat,true),Alert.alert('Alert','Tiden är slut, utför analysen!!',[{text:'OK',onPress:()=> Vibration.cancel()}])}  
 
                         </View>
             )
              }
+            
             }
 
         
@@ -143,7 +143,8 @@ class Alarm extends React.Component{
         
         
         render(){
-           
+            AlarmTime={'sec':this.state.sec ,'min':this.state.dur }      
+            
         
     return(
         this.main()
@@ -151,7 +152,9 @@ class Alarm extends React.Component{
     }
 }
 
-
+export function getAlarmTime(){
+    return JSON.stringify(AlarmTime);
+}
 
 
 const styles = StyleSheet.create({

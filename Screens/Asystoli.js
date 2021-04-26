@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import React, { Component} from 'react';
-import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput } from 'react-native';
+import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,Pressable } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
+import {getAlarmTime} from '../Functions/Alarm';
 import Timer from '../Functions/Timer';
+import {getTime} from '../Functions/Timer';
 
 //var parses=0;
 export default class Asystoli extends React.Component{
@@ -27,32 +29,53 @@ export default class Asystoli extends React.Component{
            this.state={
            
            Duration:1,
-         
+           text:'Ge 1mg adrenalin',
+           flag:false,
+           counter:118
            };
-         }  
-
+         }
+  componentDidMount(){
+   this.interval=setInterval(()=> {this.setState({counter:this.state.counter-1}),getAlarmTime()},1000);
+   this.instractions()
+  }
+  componentWillUnmount(){
+    clearInterval(this.interval);
+    
+  }
+  instractions =()=>{
+      let al = JSON.parse(getAlarmTime())
+      if(al["sec"]<11&&al["min"]==0){
+        clearInterval(this.interval)
+        
+        return(<TextInput style={styles.textarea_style} multiline={true}> 10 Sekunder kvar till att göra analysen{"\n"} 
+        </TextInput>)
+        
+      }
+     else{
+        
+        return(<TextInput style={styles.textarea_style}> {this.state.text}{"\n"} 
+        </TextInput>)
+        
+      }
+  }
          
 
          
     render(){
-      const {navigation } =this.props;
-      let time = JSON.stringify(navigation.getParam('time','NO-ID'));
-      time= JSON.parse(time);
+      let times = getTime();
+      times = JSON.parse(times);
       
-        return( 
+      return( 
              <View style={styles.constainer}>
-             <Timer sec={time["sec"]} min={time["min"]} h={time["hh"]}/>
-             <Text style={styles.textarea_style}> Defibrillering {"\n"}
-             sec={JSON.stringify(navigation.getParam('sec','NO-ID'))},
-              min={0},
-              h={0}
-              </Text>
+               
+             <Timer sec={times["sec"]} min={times["min"]} h={times["hh"]}/>
+             {this.instractions()}
             
              <View style ={styles.timerView}>
              <Alarm duration ={this.state.Duration} />
              </View>
              <TouchableOpacity style={styles.appButtonContainer}title='Klar'>
-             <Text style={styles.appButtonText}>Klar</Text>
+             <Text style={styles.appButtonText}>Ge 1mg adrenalin</Text>
              
              </TouchableOpacity>
              <TouchableOpacity style={styles.appButtonContainer2} title='Avsluta'
@@ -61,16 +84,7 @@ export default class Asystoli extends React.Component{
              <Text style={styles.appButtonText}>Avsluta</Text>
              
              </TouchableOpacity>
-             <Pressable style={styles.Bottom_Button}
-          onPress={()=> {this.AlertButton()}}> 
-          <Text style={styles.appButtonText}>Höppa Över</Text>
-          </Pressable>
-
-          <Pressable style={styles.Bottom_Button2}
-          onPress={()=> {this.AlertButton()}}
-          >
-            <Text style={styles.appButtonText}>Avsluta</Text>
-          </Pressable>
+             
              </View>
          );
     }
@@ -78,17 +92,17 @@ export default class Asystoli extends React.Component{
    
    const styles = StyleSheet.create({
        constainer:{
-         marginTop:250,
+         marginTop:300,
          borderColor:'#000'
          },
        appButtonContainer: {
       
-       top: 100,
-       left: 205,
-       width: 150,
-       height: 150,
+       top: "-40%",
+       left: "10%",
+       width: "80%",
+       height: "20%",
        borderRadius: 10,
-       backgroundColor:'red',
+       backgroundColor:'blue',
        justifyContent: 'center',
       //alignSelf: "center"
        },
@@ -101,13 +115,13 @@ export default class Asystoli extends React.Component{
        },
        appButtonContainer2:{
            
-           top: -49,
-           left: 20,
-           width: 150,
-           height: 150,
+           top: "0%",
+           left: "27%",
+           width: "50%",
+           height: "20%",
            justifyContent: 'center',
            //alignSelf: "center",
-           backgroundColor: "red",
+           backgroundColor: "#fcb800",
            borderRadius: 10,
            //paddingVertical: 10,
            //paddingHorizontal: 12,
@@ -124,7 +138,7 @@ export default class Asystoli extends React.Component{
        textarea_style:{
            fontSize:20,
            fontWeight:'bold',
-           top:-90,
+           top:"-50%",
            left:65,
            height:100,
            width:260,
