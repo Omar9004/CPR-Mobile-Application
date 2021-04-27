@@ -7,29 +7,26 @@ import Alarm from '../Functions/Alarm';
 import {getAlarmTime} from '../Functions/Alarm';
 import Timer from '../Functions/Timer';
 import {getTime} from '../Functions/Timer';
+import {
+  test,
+  dateToString,
+  storeData,
+  storeArray,
+  getData,
+  getArray,
+  DefaultContainer,
+} from '../Functions/functionContainer';
 
 //var parses=0;
 export default class Asystoli extends React.Component{
 
-   navigationOptions = ({ navigation, navigationOptions }) => {
-    const { params } = navigation.state;
-
-    return {
-      title: params ? params.otherParam : 'Asystoli',
-      /* These values are used instead of the shared configuration! */
-      headerStyle: {
-        backgroundColor: navigationOptions.headerStyle.backgroundColor,
-      },
-      headerTintColor: navigationOptions.headerTintColor,
-    };
-  };
 
   constructor(props){
          super(props);
            this.state={
            
-           Duration:1,
            text:'Ge 1mg adrenalin',
+           Adren:0,
            flag:false,
            counter:118
            };
@@ -58,7 +55,10 @@ export default class Asystoli extends React.Component{
         
       }
   }
-         
+  Adrenaline_State=()=>{
+    return (this.setState({Adren:1}))
+   
+  }   
 
          
     render(){
@@ -72,16 +72,17 @@ export default class Asystoli extends React.Component{
              {this.instractions()}
             
              <View style ={styles.timerView}>
-             <Alarm duration ={this.state.Duration} />
+             <Alarm duration ={2} />
              </View>
-             <TouchableOpacity style={styles.appButtonContainer}title='Klar'>
+             <TouchableOpacity style={styles.appButtonContainer}title='Adrenaline' onPress={async()=> {await this.setState({Adren:1}),this.Adrenaline_State(),storeData('Adren_Asys',this.state.Adren)}}>
+            
              <Text style={styles.appButtonText}>Ge 1mg adrenalin</Text>
              
              </TouchableOpacity>
              <TouchableOpacity style={styles.appButtonContainer2} title='Avsluta'
-            onPress={() => this.props.navigation.popToTop()}
+            onPress={() => this.props.navigation.navigate('CPR_Start')}
             >
-             <Text style={styles.appButtonText}>Avsluta</Text>
+             <Text style={styles.appButtonText}>Höppa Över</Text>
              
              </TouchableOpacity>
              
