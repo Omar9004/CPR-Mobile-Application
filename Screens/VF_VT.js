@@ -1,11 +1,13 @@
 import React, { Component} from 'react';
 import 'react-native-gesture-handler';
-import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,Modal, Pressable } from 'react-native';
+import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,Modal, Pressable,Platform } from 'react-native';
 import Timer from '../Functions/Timer';
 import Alarm from '../Functions/Alarm';
 import {getAlarmTime} from '../Functions/Alarm';
 import {getTime} from '../Functions/Timer';
 import AsyncStorage from '@react-native-community/async-storage';
+
+
 import {
   test,
   dateToString,
@@ -18,7 +20,9 @@ import {
 
 
 var times=0;
-
+var VfFlag=true;
+var Vf1Flag=false;
+var Vf2Flag=false;
 export default class VF_VT extends React.Component{
  
  
@@ -36,15 +40,23 @@ export default class VF_VT extends React.Component{
   };
   constructor(props){
     super(props);
-      
+    
       this.state={
       Defib:1,
       Adrenalin:0,
       Cordarone:0,
+      Add_Cordarone:2,
       Button_Pressed:0,
-      VF1_flag:true,
+      counter:118,
+
+      textStoring:"",
+
+      VF_flag:true,
+      VF1_flag:false,
+      VF2_flag:false,
       modal_flag:false,
       Button_Pressedf:false,
+      Defib_flag:false,
       Cord_flag:true,
       Ader_flag:true,
       };
@@ -52,23 +64,34 @@ export default class VF_VT extends React.Component{
     componentDidMount(){
       this.interval=setInterval(()=> {this.setState({counter:this.state.counter-1}),getAlarmTime()},1000);
       this.instractions()
+      
+      
      }
      componentWillUnmount(){
-       clearInterval(this.interval);
-       
+      let isFocused=this.props.navigation.isFocused()
+      /*if(!isFocused&&Vf2Flag){
+        VfFlag=false
+        Vf1Flag=false
+        Vf2Flag=true
+      }*/if(!isFocused){
+        VfFlag=false
+        Vf1Flag=true
+      }
+      clearInterval(this.interval);
+            
      }
      instractions =()=>{
          let al = JSON.parse(getAlarmTime())
          if(al["sec"]<11&&al["min"]==0){
            clearInterval(this.interval)
            
-           return(<TextInput style={styles.textarea_style} multiline={true}> 10 Sekunder kvar till att göra analysen{"\n"} 
+           return(<TextInput style={styles.textarea_style} multiline={true} editable={false}> 10 Sekunder kvar till att göra analysen{"\n"} 
            </TextInput>)
            
          }
         else{
            
-           return(<TextInput style={styles.textarea_style}multiline={true}> 3:de defibrillering {"\n"}
+           return(<TextInput style={styles.textarea_style}multiline={true} editable={false}> 3:de defibrillering {"\n"}
            och sedan 1mg adrenalin 
            </TextInput>)
            
@@ -78,23 +101,41 @@ export default class VF_VT extends React.Component{
       this.setState({Button_Pressed:this.state.Button_Pressed+1}), //Button counter 
       this.setState({Defib:this.state.Defib+1}),                   //Button counter for storing data
       await storeData('Defib',this.state.Defib)
-        
+      test.push({event:'Defibrellering',date :dateToString()})
+      await storeArray('Events',test)
+     // this.setState({Adrenalin:1})
+    
      if(this.state.Button_Pressed==3){
           this.setState({Ader_flag:false})
           this.setState({Cord_flag:false})
-         
-        
+          this.setState({Adrenalin:1})
+          this.setState({Cordarone:300})
+          Alert.alert("Alert","Ge patienten mediciner")
       }
       if(this.state.Button_Pressed==4){
-        this.setState({VF1_flag:false})
+        Vf1Flag=false
+        Vf2Flag=true
         this.setState({Cord_flag:false})
+        //this.setState({Cordarone:this.state.Cordarone+150})
+      }
+      if(this.state.Button_Pressed>4){
+        this.setState({Add_Cordarone:this.state.Add_Cordarone-1})
+        if(this.state.Add_Cordarone==0){
+          this.setState({Cord_flag:false})
+          this.setState({Add_Cordarone:2})
+        }
       }
           
       
     }
-   Medcin_Store=async()=>{
-    await storeData('Adren',this.state.Adrenalin)
+ 
+   Medcin_State=()=>{
+    if(!this.state.Cord_flag){
+      
+    this.setState({Cordarone:300})}
+    console.log(this.state.Cordarone) 
    }
+   
 
     AlertButton=()=>{
       Alert.alert(
@@ -113,31 +154,68 @@ export default class VF_VT extends React.Component{
       );
     }
    
-   /* componentDidMount(){
-      this.getData();
-    }*/
-     /*componentWillUnmount(){
-     this.getData();
-    }*/
+  
     main=()=>{
-     
-      if(this.state.VF1_flag){
-        
+      //this.state_managment2()
+      
+     if(VfFlag){
+      return(this.VF());
+
+     }
+     if(Vf1Flag){
       return(
-        this.VF1()
-      );
-    }else{
-      return(
-      this.VF2()
+      this.VF1()
       )
+      }else if(Vf2Flag){
+
+        return(
+        this.VF2())
       }
     }
+    VF=()=>{
+      return(
+       
+               <View >
+               <Pressable 
+                    title='Defibrillera' disabled={this.state.Defib_flag} 
+                    onPress={async() => await storeData('Defib',this.state.Defib)}
+                    style={({ pressed }) => [
+                      {
+                        backgroundColor: pressed
+                          ? 'green'
+                          : 'blue'
+                      },
+                      styles.Defib_Button2
+                    ]}
+                    >
+                    <Text style={styles.appButtonText}> Defibrillera patient</Text>
+                    
+                    </Pressable>
+                   
+                    
+                    <View >
+                    <Pressable style={styles.appButtonDisabled3} disabled={this.state.Ader_flag} 
+                    
+                    >
+                    <Text style={styles.appButtonText}></Text>
+                    
+                    </Pressable>
+                    </View>
+                    <View >
+                    <Pressable disabled={this.state.Cord_flag} style={this.state.Cord_flag?styles.appButtonDisabled3:styles. Cordarone_Button}>
+                      <Text style={styles.appButtonText}></Text>
+                      </Pressable>
+                      </View>
+                      </View>
+        );
+    }
+
 
    
     VF1=()=>{
       
       return(
-      <View style={styles.constainer} >
+      <View >
        <Pressable 
             title='Klar' disabled={this.state.Button_Pressedf} 
             onPress={async() => {await this.state_managment()}}
@@ -156,25 +234,31 @@ export default class VF_VT extends React.Component{
             
             </Pressable>
            
-           
+            
+            
             <Pressable style={this.state.Ader_flag?styles.appButtonDisabled2:styles.Adrenalin_Button} disabled={this.state.Ader_flag} title='Försätt HLR'
-            onPress={async()=>{await storeData('Adren',this.state.Adrenalin), this.setState({Ader_flag:true})}}
+            onPress={async()=>{this.Medcin_State(),await storeData('Adren',this.state.Adrenalin),test.push({event:'1mg Adrenaline',date :dateToString()})
+            await storeArray('Events',test),this.setState({Ader_flag:true}) }}
             >
             <Text style={styles.appButtonText}>1mg Adrenalin</Text>
             
             </Pressable>
+            
+            
             <Pressable disabled={this.state.Cord_flag} style={this.state.Cord_flag?styles.appButtonDisabled:styles. Cordarone_Button}
-               title='Cordarone' onPress={async()=> {await storeData('Cord',this.state.Cordarone),this.setState({Cord_flag:true})}}>
+               title='Cordarone' onPress={async()=> {this.Medcin_State(),await storeData('Cord',this.state.Cordarone),test.push({event:'300mg Cordarone',date :dateToString()})
+               await storeArray('Events',test),this.setState({Cord_flag:true})}}>
               <Text style={styles.appButtonText}>Ge 300 mg Cordarone</Text>
               </Pressable>
-            
-            </View>
+             
+              </View>
         
       );
     } 
+    
     VF2=()=>{
       return(
-        <View style={styles.constainer} >
+        <View >
           
             <Pressable 
             title='Klar' disabled={this.state.Button_Pressedf} 
@@ -195,12 +279,13 @@ export default class VF_VT extends React.Component{
               </Pressable>
 
               <Pressable disabled={this.state.Cord_flag} style={this.state.Cord_flag?styles.appButtonDisabled:styles. Cordarone_Button}
-               title='Cordarone' onPress={()=> this.setState({Cord_flag:true})}>
+               title='Cordarone' onPress={async()=> {this.setState({Cordarone:this.state.Cordarone+150}),test.push({event:'150mg Cordarone',date :dateToString()})
+               await storeArray('Events',test),await storeData('Cord',this.state.Cordarone),this.setState({Cord_flag:true})}}>
               <Text style={styles.appButtonText}>Ge 150 mg Cordarone</Text>
               </Pressable>
-              
-              
               </View>
+              
+              
         );
     }
 
@@ -211,10 +296,11 @@ export default class VF_VT extends React.Component{
    render(){
     times = getTime();
     times = JSON.parse(times);
-
+   
     return(
           this.instractions(),
-          <View style={styles.constainer2}><Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} />
+          <View >
+          <View style={styles.time}><Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} /></View>
            {this.main()}
            
            <View style ={styles.timerView}>
@@ -228,11 +314,7 @@ export default class VF_VT extends React.Component{
           <Text style={styles.appButtonText}>Höppa Över</Text>
           </Pressable>
 
-          <Pressable style={styles.Bottom_Button2}
-          onPress={()=> {this.AlertButton()}}
-          >
-            <Text style={styles.appButtonText}>Avsluta</Text>
-          </Pressable>
+         
 
           <Modal
           animationType="slide"
@@ -244,10 +326,10 @@ export default class VF_VT extends React.Component{
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <TextInput style={styles.modalText}  blurOnSubmit={true} autoCorrect={true} multiline={true}> </TextInput>
+              <TextInput style={styles.modalText}  blurOnSubmit={true} autoCorrect={true} multiline={true} onChangeText={(text)=>{this.setState({textStoring:text})}}> </TextInput>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setState({modal_flag:!this.state.modal_flag})}
+                onPress={() => {this.setState({modal_flag:!this.state.modal_flag}),console.log(this.state.textStoring)}}
               >
                 
                 <Text style={styles.textStyle}>Lämna in</Text>
@@ -287,33 +369,42 @@ const styles = StyleSheet.create({
       marginTop:-150,
       borderColor:'#000',
       },
-      constainer2:{
-        top:240,
+      time:{
+        top:260,
         
       },
+    
     Defib_Button: {
-      marginBottom:10,
-    top: 160,
+    //marginBottom:10,
+    top:200,
     left: 40,
     width: 300,
-    height: 80,
+    height: 100,
     borderRadius: 10,
-    //backgroundColor:'blue',
     backgroundColor:'blue',
     justifyContent: 'center',
-   //alignSelf: "center"
-      //alignItems:"center"
+    
     },
+    Defib_Button2: {
+      //marginBottom:10,
+      top: 300,
+      left: 15,
+      width: 350,
+      height: 100,
+      borderRadius: 10,
+      backgroundColor:'blue',
+      justifyContent: 'center',
+      },
     appButtonText: {
-      fontSize: 18,
+      fontSize: 20,
       color: "#fff",
       fontWeight: "bold",
       alignSelf: "center",
       textTransform: "uppercase"
     },
     Adrenalin_Button:{
-      marginBottom:10,
-      top:180,
+      //marginBottom:10,
+      top:230,
       left: 40,
       width: 300,
       height: 50,
@@ -325,8 +416,9 @@ const styles = StyleSheet.create({
         
     },
     Cordarone_Button:{
-      marginBottom:20,
-      top:200,
+      //marginBottom:20,
+      
+      top:250,
       left: 40,
       width: 300,
       height: 50,
@@ -339,8 +431,8 @@ const styles = StyleSheet.create({
       
   },
       appButtonDisabled:{
-      marginBottom:20,
-      top:200,
+      //marginBottom:20,
+      top:250,
       left: 40,
       width: 300,
       height: 50,
@@ -351,8 +443,8 @@ const styles = StyleSheet.create({
       alignItems: 'center'
       },
     appButtonDisabled2:{
-      marginBottom:10,
-      top:180,
+      //marginBottom:10,
+      top:230,
       left: 40,
       width: 300,
       height: 50,
@@ -361,9 +453,21 @@ const styles = StyleSheet.create({
        justifyContent: 'center',
        alignItems: 'center'
        },
+       appButtonDisabled3:{
+        //marginBottom:20,
+        top:250,
+        left: 40,
+        width: 300,
+        height: 50,
+      borderRadius: 10,
+        //backgroundColor:'gray',
+       // color:"#000",
+        justifyContent: 'center',
+        alignItems: 'center'
+        },
     Bottom_Button:{
-      top: 200,
-      left: 100,
+      top: 250,
+      left: 0,
       width: 150,
       height: 50,
       justifyContent: 'center',
@@ -381,17 +485,17 @@ const styles = StyleSheet.create({
     }, 
     timerView:{
       //position: 'absolute',
-      top:110,
+      top:200,
       left: 140,
       width: 100,
       height: 100,
       borderRadius: 100,
     },
     textarea_style:{
-        marginBottom:20,
+        //marginBottom:20,
         fontSize:20,
         fontWeight:'bold',
-        top:-230,
+        top:-150,
         //left:65,
         height:100,
         width:260,
@@ -432,7 +536,7 @@ const styles = StyleSheet.create({
     },
     
     buttonOpen: {
-      top:-520,
+      top:-370,
       left:-140,
       height:50,
       backgroundColor: "black",
@@ -449,7 +553,7 @@ const styles = StyleSheet.create({
 
     },
     modalText: {
-      marginBottom: 15,
+     // marginBottom: 15,
       width:200,
       height:100,
       textAlign: "center",
@@ -473,7 +577,7 @@ const styles = StyleSheet.create({
       },
       ButtonStyle2:{
         //position: 'absolute',
-        top: "-100%",
+        top: "-70%",
         left: 250,
         width: "25%",
         height: 50,

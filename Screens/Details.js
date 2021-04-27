@@ -36,7 +36,7 @@ export default class Details extends Component{
                   
                
                 { test.map((item,index)=>(
-                 <Text key={index} > {item["event"] +" "+ item["date"] } </Text>)
+                 <Text style={styles.textStyle} key={index} > {item["event"] +": "+ item["date"] } </Text>)
                  )}
                 </ScrollView>
                     
@@ -88,5 +88,9 @@ const styles = StyleSheet.create({
         height: "70%",
         borderColor: "grey",
         borderWidth: 1,
+      },
+      textStyle:{
+        fontSize:17,
+        
       }
 })

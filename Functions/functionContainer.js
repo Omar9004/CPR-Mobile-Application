@@ -85,6 +85,15 @@ export const getArray = async (key, arrayToLoad) => {
     // error reading value
   }
 };
+export const clearAppData = async function() {
+  try {
+      const keys = await AsyncStorage.getAllKeys();
+      console.log(keys)
+      await AsyncStorage.multiRemove(keys);
+  } catch (error) {
+      console.error('Error clearing app data.');
+  }
+}
 
 export const DefaultContainer = ({ children }) => (
   <SafeAreaView style={styles.container}>{children}</SafeAreaView>
@@ -96,6 +105,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
   },
 });
+
 
 //const [sampleText, changeText] = useState("Empty Text.");
 

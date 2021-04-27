@@ -16,22 +16,37 @@ export default class Summary extends Component{
     super(props);
       this.state={
         Defib:0,
-        Adren:0,
+        Adren_VF:0,
+        Adren_Asys:0,
+        Adren_tot:0,
         Cord:0,
       };
     }
 
    get =async()=>{
     this.setState({Defib:await getData('Defib')})
-    this.setState({Adren:await getData('Adren')})
+    this.setState({Adren_VF:await getData('Adren')})
+    this.setState({ Adren_Asys:await getData('Adren_Asys')})
+    let AdrenAsys= this.state.Adren_Asys;
+    let AdrenVF= this.state.Adren_VF;
+    
+    if((AdrenAsys!==(undefined&&0))&&(AdrenVF!==(undefined&&0))){
+      
+    this.setState({ Adren_tot:2})
+    console.log(AdrenVF+" "+AdrenAsys)
+  
+    
+  }else{this.setState({Adren_tot:this.state.Adren_VF!==(undefined&&0)?this.state.Adren_VF:this.state.Adren_Asys})}
+
     this.setState({Cord:await getData('Cord')})
+    
+    
   }
 
-  async componentDidMount(){
+  async componentDidMount(){    
    await this.get()
     
   }
- 
   
      render(){
       
@@ -43,7 +58,7 @@ export default class Summary extends Component{
                 <Text style={styles.ButtonStyle}>
                     Defibrilation: {this.state.Defib} {"\n"}
             
-                    Adernalin: {this.state.Adren} mg{"\n"}
+                    Adernalin: {this.state.Adren_tot} mg{"\n"}
                 
                     Cordarone:{this.state.Cord} mg {"\n"}
                 </Text>

@@ -12,8 +12,9 @@ import {
   getData,
   getArray,
   DefaultContainer,
+  clearAppData
 } from "../Functions/functionContainer";
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Start extends React.Component{
  
@@ -33,10 +34,15 @@ export default class Start extends React.Component{
     super(props);
       this.state={
       Duration:1,
-      };
-    }            
-    render(){
       
+      };
+    } 
+    componentDidMount(){
+      
+    }
+               
+    render(){
+      clearAppData() 
         return(
           <View style={{flex: 1, justifyContent: 'center'}}>
              <View style={styles.timerView}>
@@ -77,6 +83,7 @@ export default class Start extends React.Component{
         );
     }
 }
+
 
 const styles = StyleSheet.create({
   appButtonContainer: {
