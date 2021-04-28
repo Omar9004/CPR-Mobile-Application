@@ -25,24 +25,6 @@ export default class CPR_Start extends Component{
       pressed:false
       };
     }
-   
-  /*getData=async()=>{
-        
-    try{
-      const value = await AsyncStorage.getItem(secKey);
-      parses=await JSON.parse(value);
-      
-       
-    }catch(e){
-        console.log("Empty");
-    }
-}
- 
-move = async () => {
-   await this.getData();
-  
-  
-}*/
 
 
   
@@ -73,7 +55,8 @@ move = async () => {
           <TouchableOpacity style = {styles.appButtonContainer2}
             
            
-            onPress={() => {this.setState({klar_flag:false})}}
+            onPress={() => {this.setState({klar_flag:false})&this.props.navigation.navigate('Options')& test.push({event:'Analys',date :dateToString()})&
+            storeArray('Events',test)}}
             
             
           >
@@ -81,17 +64,8 @@ move = async () => {
              
           </TouchableOpacity>
 
-          <Pressable style = {this.state.klar_flag?styles.klarButtonDisabled:styles.Bottom_Button}
-            disabled={this.state.klar_flag}
-           
-            onPress={() => {this.props.navigation.navigate('Options')& test.push({event:'Analys',date :dateToString()})&
-            storeArray('Events',test)}}
-            
-            
-          >
-             <Text style={styles.appButtonText}>Klar</Text>
-             
-          </Pressable>
+          
+
         
           
         </View>
@@ -126,7 +100,7 @@ const styles = StyleSheet.create({
      
     },
     appButtonContainer2:{
-        top:-80,
+        top:-50,
         left: 50,
         width: 300,
         height: 100,
@@ -136,6 +110,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
         
     },
+    
     appButtonDisabled:{
     top: -100,
     left: 50,

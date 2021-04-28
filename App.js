@@ -9,6 +9,7 @@ import CPR_Start from './Screens/CPR_Start';
 import Asystoli from './Screens/Asystoli';
 import Summary from './Screens/Summary';
 import Details from './Screens/Details';
+import Notes from './Screens/Notes';
 
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
@@ -38,6 +39,7 @@ const AppSwitherVF = createSwitchNavigator({
   Options:{ 
     screen:Options,
   },
+ 
   
 },
 {
@@ -84,6 +86,10 @@ const AppNavigator = createStackNavigator({
   Details:{
     screen:Details
   },
+  Notes:{
+    screen:Notes,
+  },
+  
 
   
   VF:AppSwitherVF,

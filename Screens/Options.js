@@ -37,7 +37,7 @@ export default class Options extends Component {
     times = JSON.parse(times)
     return (
       
-      <View style={styles.constainer}>
+      <View >
         
         <Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} >
         
@@ -77,6 +77,23 @@ export default class Options extends Component {
                <Text style={styles.SummaryButtonText}>Summary</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style = {styles.Avslut_Button}
+            
+           
+            onPress={() => Alert.alert("Alert","Vill du avsluta HLR?",
+            [
+              {text:'Avbryt',style:'cancel'},
+              {text:'Ok',onPress :()=>this.props.navigation.navigate('Summary')}
+            ]
+              )
+            }
+            
+            
+          >
+             <Text style={styles.appButtonText}>Avsluta</Text>
+             
+          </TouchableOpacity>
+
 
       </View>
 
@@ -93,7 +110,7 @@ const styles = StyleSheet.create({
   },
   appButtonContainer: {
     position: 'absolute',
-    top: 50,
+    top: "80%",
     left: 205,
     width: 150,
     height: 150,
@@ -119,7 +136,7 @@ const styles = StyleSheet.create({
   },
   ButtonStyle2:{
     //position: 'absolute',
-    top: "-130%",
+    top: "-20%",
     left: 250,
     width: "25%",
     height: 50,
@@ -128,8 +145,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //alignSelf: "center"
   },
+  Avslut_Button:{
+    top:"90%",
+    left: "30%",
+    width: 160,
+    height: 50,
+    borderRadius:10,
+    backgroundColor:'red',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   appButtonContainer2: {
-    top: 0,
+    top: "63%",
     left: 20,
     width: 150,
     height: 150,

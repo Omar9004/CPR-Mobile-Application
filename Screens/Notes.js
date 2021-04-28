@@ -16,6 +16,7 @@ import {  StatusBar,
 import { NavigationActions } from 'react-navigation';
 import {
     test,
+    text,
     dateToString,
     storeData,
     storeArray,
@@ -23,10 +24,22 @@ import {
     getArray,
     DefaultContainer,
   } from "../Functions/functionContainer";
-export default class Details extends Component{
+export default class Notes extends Component{
  /* { test.map((item,index)=>(
     <Text key={index} > {item["event"] +" "+ item["date"] } </Text>)
-    )}*/
+    )}*/ /*constructor(props){
+    super(props);
+    this.state={
+      Notes:""
+    };
+  }
+  componentDidMount(){
+      this.get()
+  }
+  get=async()=>{
+      this.setState({Notes:JSON.parse(await getData('Notes'))})
+     
+  }*/
     render(){
       
         return (
@@ -34,8 +47,7 @@ export default class Details extends Component{
                 <View style={styles.bigTextArea}>
                 <ScrollView>
                   
-               
-                { test.map((item,index)=>(
+                { text.map((item,index)=>(
                  <Text style={styles.textStyle} key={index} > {item["event"] +": "+ item["date"] } </Text>)
                  )}
                 </ScrollView>
@@ -43,18 +55,10 @@ export default class Details extends Component{
                 </View>
                 <View style={styles.Bottom_Button}>
                 <Pressable 
-                onPress={()=>{this.props.navigation.popToTop()}}
+                onPress={()=>{this.props.navigation.goBack()}}
                 >
                       
-                    <Text style={styles.appButtonText}>Avsluta </Text>
-                </Pressable>
-                </View>
-                <View style={styles.Bottom_Button2}>
-                <Pressable 
-                onPress={()=>{this.props.navigation.navigate('Notes')}}
-                >
-                      
-                    <Text style={styles.appButtonText}>Anteckningar </Text>
+                    <Text style={styles.appButtonText}>Stäng</Text>
                 </Pressable>
                 </View>
             </View>
@@ -70,15 +74,6 @@ const styles = StyleSheet.create({
         marginTop: 50,
       },
       Bottom_Button:{
-        top: "5%",
-        left: "10%",
-        width: "80%",
-        height: "10%",
-        justifyContent: 'center',
-        backgroundColor: "blue",
-        borderRadius: 10,
-      },
-      Bottom_Button2:{
         top: "10%",
         left: "10%",
         width: "80%",
@@ -108,6 +103,6 @@ const styles = StyleSheet.create({
       },
       textStyle:{
         fontSize:17,
-        
+        textAlign:'justify'
       }
 })

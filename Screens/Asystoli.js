@@ -18,6 +18,9 @@ import {
 } from '../Functions/functionContainer';
 
 //var parses=0;
+var counter=0;
+var Adren_counter=0;
+
 export default class Asystoli extends React.Component{
 
 
@@ -27,21 +30,30 @@ export default class Asystoli extends React.Component{
            
            text:'Ge 1mg adrenalin',
            Adren:0,
-           flag:false,
+           flag:true,
+           flag2:true,
+          
            counter:118
            };
          }
   componentDidMount(){
    this.interval=setInterval(()=> {this.setState({counter:this.state.counter-1}),getAlarmTime()},1000);
-   this.instractions()
+   this.state_manager()
+  // this.instractions('10 Sekunder kvar till att göra analysen')
   }
   componentWillUnmount(){
+    let isFocused = this.props.navigation.isFocused();
+    if(!isFocused){
+      counter=counter+1;
+      console.log(counter)
+    }
     clearInterval(this.interval);
     
   }
   instractions =()=>{
       let al = JSON.parse(getAlarmTime())
       if(al["sec"]<11&&al["min"]==0){
+        Flag_ana=false;
         clearInterval(this.interval)
         
         return(<TextInput style={styles.textarea_style} multiline={true}> 10 Sekunder kvar till att göra analysen{"\n"} 
@@ -50,21 +62,35 @@ export default class Asystoli extends React.Component{
       }
      else{
         
-        return(<TextInput style={styles.textarea_style}> {this.state.text}{"\n"} 
+        return(<TextInput style={styles.textarea_style} multiline={true}> {this.state.text}{"\n"} 
         </TextInput>)
         
       }
   }
   Adrenaline_State=()=>{
-    return (this.setState({Adren:1}))
-   
-  }   
+   return( this.setState({flag2:true}),Adren_counter=Adren_counter+1)}
+  
+  state_manager=()=>{
+    
+    if(counter%2 ===0){
+      this.setState({flag:false})
+      this.setState({flag2:false})
+    }else{
+      this.setState({flag2:false})
+      this.setState({text:'Ge 1mg Adrenalin var 4:e minut'})
+    }
+  }
+   Storing_Data=async()=>{
+    await storeData('Adren_Asys',Adren_counter)
+    test.push({event:'1mg Adrenaline',date :dateToString()})
+    await storeArray('Events',test)
+  }
 
          
     render(){
       let times = getTime();
       times = JSON.parse(times);
-      
+      this.set
       return( 
              <View style={styles.constainer}>
                
@@ -74,15 +100,15 @@ export default class Asystoli extends React.Component{
              <View style ={styles.timerView}>
              <Alarm duration ={2} />
              </View>
-             <TouchableOpacity style={styles.appButtonContainer}title='Adrenaline' onPress={async()=> {await this.setState({Adren:1}),this.Adrenaline_State(),storeData('Adren_Asys',this.state.Adren)}}>
+             <TouchableOpacity disabled={this.state.flag===this.state.flag2?false:true} style={this.state.flag2||this.state.flag?styles.Adren_Disabled:styles.appButtonContainer}title='Adrenaline' onPress={async()=> {this.Adrenaline_State(),this.Storing_Data()}}>
             
              <Text style={styles.appButtonText}>Ge 1mg adrenalin</Text>
              
              </TouchableOpacity>
-             <TouchableOpacity style={styles.appButtonContainer2} title='Avsluta'
+             <TouchableOpacity style={styles.appButtonContainer2} title='Analys' 
             onPress={() => this.props.navigation.navigate('CPR_Start')}
             >
-             <Text style={styles.appButtonText}>Höppa Över</Text>
+             <Text style={styles.appButtonText}>Till Analysen</Text>
              
              </TouchableOpacity>
              
@@ -107,6 +133,17 @@ export default class Asystoli extends React.Component{
        justifyContent: 'center',
       //alignSelf: "center"
        },
+       Adren_Disabled: {
+      
+        top: "-40%",
+        left: "10%",
+        width: "80%",
+        height: "20%",
+        borderRadius: 10,
+        backgroundColor:'gray',
+        justifyContent: 'center',
+       //alignSelf: "center"
+        },
        appButtonText: {
          fontSize: 18,
          color: "#fff",

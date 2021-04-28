@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 }
 
 export const test = [];
+export const text = [];
 
 //setValue(value + 1 - (value / 38).toFixed(0) * 20) counter with reset
 
@@ -32,6 +33,15 @@ export const dateToString = () => {
     "/" +
     new Date().getDate() +
     " " +
+    new Date().getHours() +
+    ":" +
+    new Date().getMinutes() +
+    ":" +
+    new Date().getSeconds()
+  );
+};
+export const dateToString_Clock = () => {
+  return (
     new Date().getHours() +
     ":" +
     new Date().getMinutes() +

@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 import {
+  dateToString_Clock,
+  text,
   test,
   dateToString,
   storeData,
@@ -23,26 +25,16 @@ var times=0;
 var VfFlag=true;
 var Vf1Flag=false;
 var Vf2Flag=false;
+var counter= 0;
 export default class VF_VT extends React.Component{
  
  
-   navigationOptions = ({ navigation, navigationOptions }) => {
-    const { params } = navigation.state;
-
-    return {
-      title: params ? params.otherParam : 'VT/VF',
-      /* These values are used instead of the shared configuration! */
-      headerStyle: {
-        backgroundColor: navigationOptions.headerStyle.backgroundColor,
-      },
-      headerTintColor: navigationOptions.headerTintColor,
-    };
-  };
   constructor(props){
     super(props);
     
       this.state={
       Defib:1,
+      Defib1:1,
       Adrenalin:0,
       Cordarone:0,
       Add_Cordarone:2,
@@ -57,6 +49,7 @@ export default class VF_VT extends React.Component{
       modal_flag:false,
       Button_Pressedf:false,
       Defib_flag:false,
+      Defib_flag2:false,
       Cord_flag:true,
       Ader_flag:true,
       };
@@ -76,6 +69,7 @@ export default class VF_VT extends React.Component{
       }*/if(!isFocused){
         VfFlag=false
         Vf1Flag=true
+        counter++;
       }
       clearInterval(this.interval);
             
@@ -112,13 +106,13 @@ export default class VF_VT extends React.Component{
           this.setState({Cordarone:300})
           Alert.alert("Alert","Ge patienten mediciner")
       }
-      if(this.state.Button_Pressed==4){
+      if(this.state.Button_Pressed==5){
         Vf1Flag=false
         Vf2Flag=true
         this.setState({Cord_flag:false})
         //this.setState({Cordarone:this.state.Cordarone+150})
       }
-      if(this.state.Button_Pressed>4){
+      if(this.state.Button_Pressed>5){
         this.setState({Add_Cordarone:this.state.Add_Cordarone-1})
         if(this.state.Add_Cordarone==0){
           this.setState({Cord_flag:false})
@@ -164,6 +158,7 @@ export default class VF_VT extends React.Component{
      }
      if(Vf1Flag){
       return(
+      
       this.VF1()
       )
       }else if(Vf2Flag){
@@ -177,16 +172,10 @@ export default class VF_VT extends React.Component{
        
                <View >
                <Pressable 
-                    title='Defibrillera' disabled={this.state.Defib_flag} 
-                    onPress={async() => await storeData('Defib',this.state.Defib)}
-                    style={({ pressed }) => [
-                      {
-                        backgroundColor: pressed
-                          ? 'green'
-                          : 'blue'
-                      },
-                      styles.Defib_Button2
-                    ]}
+                    title='Defibrillera' disabled={this.state.Defib_flag2} 
+                    onPress={async() => {this.setState({Defib_flag2:true}),await storeData('Defib1',this.state.Defib1),test.push({event:'Defibrellering',date :dateToString()})
+                    await storeArray('Events',test)}}
+                    style={this.state.Defib_flag2?styles.Defib_Disabled_Button2:styles.Defib_Button2}
                     >
                     <Text style={styles.appButtonText}> Defibrillera patient</Text>
                     
@@ -311,7 +300,7 @@ export default class VF_VT extends React.Component{
            {this.instractions()}
           <Pressable style={styles.Bottom_Button}
           onPress={()=> {this.AlertButton()}}> 
-          <Text style={styles.appButtonText}>Höppa Över</Text>
+          <Text style={styles.appButtonText}>Till Analysen</Text>
           </Pressable>
 
          
@@ -329,7 +318,8 @@ export default class VF_VT extends React.Component{
               <TextInput style={styles.modalText}  blurOnSubmit={true} autoCorrect={true} multiline={true} onChangeText={(text)=>{this.setState({textStoring:text})}}> </TextInput>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => {this.setState({modal_flag:!this.state.modal_flag}),console.log(this.state.textStoring)}}
+                onPress={async() => {this.setState({modal_flag:!this.state.modal_flag}),text.push({event:this.state.textStoring,date :dateToString_Clock()})
+                await storeArray('Text',text)}}
               >
                 
                 <Text style={styles.textStyle}>Lämna in</Text>
@@ -465,10 +455,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
         },
+        Defib_Disabled_Button2: {
+          //marginBottom:10,
+          top: 300,
+          left: 15,
+          width: 350,
+          height: 100,
+          borderRadius: 10,
+          backgroundColor:'gray',
+          justifyContent: 'center',
+          },
     Bottom_Button:{
-      top: 250,
+      top: 260,
       left: 0,
-      width: 150,
+      width: 180,
       height: 50,
       justifyContent: 'center',
       backgroundColor: "#fcb800",

@@ -65,17 +65,7 @@ export default class Start extends React.Component{
             </TouchableOpacity>
 
             
-            <TouchableOpacity style = {styles.ButtonStyle2}
-              
-              title="Summary"
-              onPress={() => this.props.navigation.navigate('Summary')}
-              
-              
-            >
-              
-              
-               <Text style={styles.SummaryButtonText}>Summary</Text>
-            </TouchableOpacity>
+          
             
             
            </View>

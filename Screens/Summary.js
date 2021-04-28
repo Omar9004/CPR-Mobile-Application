@@ -16,6 +16,8 @@ export default class Summary extends Component{
     super(props);
       this.state={
         Defib:0,
+        Defib1:0,
+        DefibTot:0,
         Adren_VF:0,
         Adren_Asys:0,
         Adren_tot:0,
@@ -25,15 +27,24 @@ export default class Summary extends Component{
 
    get =async()=>{
     this.setState({Defib:await getData('Defib')})
+    this.setState({Defib1:await getData('Defib1')})
+    if(this.state.Defib!=undefined&&this.state.Defib1!=undefined){
+      let Defib_tot=JSON.parse(this.state.Defib1)+JSON.parse(this.state.Defib)
+      this.setState({DefibTot:Defib_tot})
+    }else{
+      this.setState({DefibTot:this.state.Defib1!==undefined?this.state.Defib1:this.state.Defib})
+    }
+
+
     this.setState({Adren_VF:await getData('Adren')})
     this.setState({ Adren_Asys:await getData('Adren_Asys')})
     let AdrenAsys= this.state.Adren_Asys;
     let AdrenVF= this.state.Adren_VF;
-    
-    if((AdrenAsys!==(undefined&&0))&&(AdrenVF!==(undefined&&0))){
-      
-    this.setState({ Adren_tot:2})
-    console.log(AdrenVF+" "+AdrenAsys)
+
+    if((AdrenAsys!==undefined)&&(AdrenVF!==undefined)){
+    let AdrenTot=JSON.parse(AdrenVF)+JSON.parse(AdrenAsys);
+    this.setState({ Adren_tot:AdrenTot})
+ 
   
     
   }else{this.setState({Adren_tot:this.state.Adren_VF!==(undefined&&0)?this.state.Adren_VF:this.state.Adren_Asys})}
@@ -56,7 +67,7 @@ export default class Summary extends Component{
             <View style={styles.Container}>
                 
                 <Text style={styles.ButtonStyle}>
-                    Defibrilation: {this.state.Defib} {"\n"}
+                    Defibrilation: {this.state.DefibTot} {"\n"}
             
                     Adernalin: {this.state.Adren_tot} mg{"\n"}
                 
