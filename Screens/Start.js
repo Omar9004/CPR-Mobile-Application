@@ -12,36 +12,30 @@ import {
   getData,
   getArray,
   DefaultContainer,
-  clearAppData
+  ArrayGenerator,
+  clearAppData,
+  dateToString_Clock
 } from "../Functions/functionContainer";
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {VF_VTResets}from'./VF_VT';
+//var NewArray;
 export default class Start extends React.Component{
- 
-  /*static navigationOptions = ({ navigation, navigationOptions }) => {
-    const { params } = navigation.state;
 
-    return {
-      title: params ? params.otherParam : 'Home',
-      /* These values are used instead of the shared configuration! 
-      headerStyle: {
-        backgroundColor: navigationOptions.headerStyle.backgroundColor,
-      },
-      headerTintColor: navigationOptions.headerTintColor,
-    };
-  };*/
   constructor(props){
     super(props);
+    
       this.state={
       Duration:1,
       
       };
     } 
     componentDidMount(){
-      
+      NewArray= ArrayGenerator()
+      VF_VTResets()
     }
                
     render(){
+      
       clearAppData() 
         return(
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -52,9 +46,9 @@ export default class Start extends React.Component{
               <TouchableOpacity style = {styles.ButtonStyle}
               
               title="Start"
-              onPress={() => this.props.navigation.navigate('CPR_Start')&
-              test.push({event:'HLR börjar',date :dateToString()})&
-              storeArray('Events',test)
+              onPress={async() => this.props.navigation.navigate('CPR_Start')&
+              //getNewArray().push({event:'HLR börjar', date:dateToString()})
+              await storeArray('Events','HLR börjar',dateToString(),test)
             }
               
               
@@ -72,6 +66,9 @@ export default class Start extends React.Component{
         
         );
     }
+}
+export const getNewArray=()=>{
+  return NewArray
 }
 
 

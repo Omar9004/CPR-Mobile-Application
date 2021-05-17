@@ -74,21 +74,27 @@ export const getData = async (key) => {
   }
 };
 
-export const storeArray = async (key, arrayToSave) => {
+export const storeArray = async (key,data,date,ToArray) => {
   try {
-    const jsonValue = JSON.stringify(arrayToSave);
+    
+    ToArray.push({event:data, date:date})
+    const jsonValue = JSON.stringify(ToArray);
+    
     await AsyncStorage.setItem(key, jsonValue);
+    
   } catch (e) {
     console.log("Error");
   }
 };
 
-export const getArray = async (key, arrayToLoad) => {
+export async function getArray (key, arrayToLoad) {
   try {
+    
     const jsonValue = await AsyncStorage.getItem(key);
+    
     let temp = jsonValue != null ? JSON.parse(jsonValue) : null;
-    arrayToLoad.splice(0, arrayToLoad.length, ...temp);
-   
+    arrayToLoad.splice(0, arrayToLoad.length, ...temp); 
+    return(temp)
     
   } catch (e) {
     console.log("Error");
@@ -103,6 +109,10 @@ export const clearAppData = async function() {
   } catch (error) {
       console.error('Error clearing app data.');
   }
+}
+export const ArrayGenerator =()=>{
+  let NewArray=[]
+  return NewArray
 }
 
 export const DefaultContainer = ({ children }) => (

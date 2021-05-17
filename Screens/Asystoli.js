@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { Component} from 'react';
-import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,Pressable } from 'react-native';
+import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput,Pressable,Modal,KeyboardAvoidingView,Platform } from 'react-native';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
@@ -8,6 +8,7 @@ import {getAlarmTime} from '../Functions/Alarm';
 import Timer from '../Functions/Timer';
 import {getTime} from '../Functions/Timer';
 import {
+  text,
   test,
   dateToString,
   storeData,
@@ -15,12 +16,13 @@ import {
   getData,
   getArray,
   DefaultContainer,
+  dateToString_Clock
 } from '../Functions/functionContainer';
 
 //var parses=0;
 var counter=0;
 var Adren_counter=0;
-
+var AlarmTime;
 export default class Asystoli extends React.Component{
 
 
@@ -32,7 +34,8 @@ export default class Asystoli extends React.Component{
            Adren:0,
            flag:true,
            flag2:true,
-          
+           textStoring:"",
+           modal_flag:false,
            counter:118
            };
          }
@@ -45,7 +48,6 @@ export default class Asystoli extends React.Component{
     let isFocused = this.props.navigation.isFocused();
     if(!isFocused){
       counter=counter+1;
-      console.log(counter)
     }
     clearInterval(this.interval);
     
@@ -56,13 +58,13 @@ export default class Asystoli extends React.Component{
         Flag_ana=false;
         clearInterval(this.interval)
         
-        return(<TextInput style={styles.textarea_style} multiline={true}> 10 Sekunder kvar till att göra analysen{"\n"} 
+        return(<TextInput style={styles.textarea_style} multiline={true} editable={false}> 10 Sekunder kvar till att göra analysen{"\n"} 
         </TextInput>)
         
       }
      else{
         
-        return(<TextInput style={styles.textarea_style} multiline={true}> {this.state.text}{"\n"} 
+        return(<TextInput style={styles.textarea_style} multiline={true} editable={false}> {this.state.text}{"\n"} 
         </TextInput>)
         
       }
@@ -82,15 +84,17 @@ export default class Asystoli extends React.Component{
   }
    Storing_Data=async()=>{
     await storeData('Adren_Asys',Adren_counter)
-    test.push({event:'1mg Adrenaline',date :dateToString()})
-    await storeArray('Events',test)
+    //test.push({event:'1mg Adrenaline',date :dateToString()})
+    await storeArray('Events','1mg Adrenaline',dateToString(),test)
   }
 
          
     render(){
       let times = getTime();
       times = JSON.parse(times);
-      this.set
+
+      AlarmTime=getAlarmTime();
+      AlarmTime=JSON.parse(AlarmTime);
       return( 
              <View style={styles.constainer}>
                
@@ -98,7 +102,7 @@ export default class Asystoli extends React.Component{
              {this.instractions()}
             
              <View style ={styles.timerView}>
-             <Alarm duration ={2} />
+             <Alarm duration ={AlarmTime["min"]} sec={AlarmTime["sec"]}status={true}/>
              </View>
              <TouchableOpacity disabled={this.state.flag===this.state.flag2?false:true} style={this.state.flag2||this.state.flag?styles.Adren_Disabled:styles.appButtonContainer}title='Adrenaline' onPress={async()=> {this.Adrenaline_State(),this.Storing_Data()}}>
             
@@ -111,6 +115,34 @@ export default class Asystoli extends React.Component{
              <Text style={styles.appButtonText}>Till Analysen</Text>
              
              </TouchableOpacity>
+          <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modal_flag}
+          onRequestClose={() => {
+            this.setState({modal_flag:!this.state.modal_flag});
+          }}
+        >
+          <KeyboardAvoidingView style={styles.centeredView}  behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <View style={styles.modalView}>
+              <TextInput style={styles.modalText}  blurOnSubmit={true} autoCorrect={true} multiline={true} onChangeText={(text)=>{this.setState({textStoring:text})}}> </TextInput>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={async() => {this.setState({modal_flag:!this.state.modal_flag}),//text.push({event:this.state.textStoring,date :dateToString_Clock()})
+                this.state.textStoring!==""?await storeArray('Text',this.state.textStoring,dateToString_Clock(),text):""}}
+              >
+                
+                <Text style={styles.textStyle}>{this.state.textStoring===''?'Stäng':'Spara'}</Text>
+              </Pressable>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => this.setState({modal_flag:!this.state.modal_flag})}
+        >
+          <Text style={styles.textStyle}>Lägg till</Text>
+        </Pressable>
              
              </View>
          );
@@ -205,6 +237,66 @@ export default class Asystoli extends React.Component{
         backgroundColor: "#fcb800",
         borderRadius: 10,
       },
+      centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+     
+      modalView: {
+        //margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 10,
+          height: 10
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 10,
+        //padding: 15,
+        //textAlign:'center',
+        justifyContent:'center',
+        width:100,
+        height:50,
+        elevation: 2
+      },
+      
+      buttonOpen: {
+        top:"-140%",
+        left:30,
+        height:50,
+        width:90,
+        backgroundColor: "black",
+        justifyContent: 'center'
+  
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize:18
+        
+  
+      },
+      modalText: {
+       // marginBottom: 15,
+        width:300,
+        height:200,
+        fontSize:20,
+        //textAlign: '',
+        backgroundColor:"silver"
+      }
      
      })
      

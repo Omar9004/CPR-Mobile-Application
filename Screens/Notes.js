@@ -24,7 +24,7 @@ import {
     getArray,
     DefaultContainer,
   } from "../Functions/functionContainer";
-export default class Notes extends Component{
+export default class Notes extends React.Component{
  /* { test.map((item,index)=>(
     <Text key={index} > {item["event"] +" "+ item["date"] } </Text>)
     )}*/ /*constructor(props){

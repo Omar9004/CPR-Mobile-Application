@@ -14,9 +14,10 @@ import Notes from './Screens/Notes';
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import {createSwitchNavigator}from 'react-navigation';
+import {enableScreens}from 'react-native-screens'
 //import Screen2 from './Screens/Screen2';
 
-
+enableScreens(true);
 export default class App extends React.Component{
   render(){  
     return(
@@ -29,6 +30,9 @@ export default class App extends React.Component{
   
 }
 const AppSwitherVF = createSwitchNavigator({
+  Options:{ 
+    screen:Options,
+  },
   VF_VT:{
     screen:VF_VT
   },
@@ -36,9 +40,8 @@ const AppSwitherVF = createSwitchNavigator({
   Asystoli:{
     screen:Asystoli,
   },
-  Options:{ 
-    screen:Options,
-  },
+  
+  
  
   
 },
@@ -58,12 +61,15 @@ const AppSwitherVF = createSwitchNavigator({
   }
 
 })
-const SummaryStack = createSwitchNavigator({
+const SummaryStack = createStackNavigator({
   Summary:{
     screen:Summary,
   },
   Details:{
     screen:Details
+  },
+  Notes:{
+    screen:Notes,
   },
   
 },{

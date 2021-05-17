@@ -11,8 +11,9 @@ import {
   getData,
   getArray,
   DefaultContainer,
+  dateToString_Clock,
 } from "../Functions/functionContainer";
-
+//import {getNewArray}from './Start'
 var parses = 0;
 export default class CPR_Start extends Component{
   constructor(props){
@@ -32,7 +33,7 @@ export default class CPR_Start extends Component{
    
         return(
             
-            <View style={styles.constainer}>
+            <SafeAreaView style={styles.constainer}>
            <Timer sec={0} min={0} h={0}/>
             <Pressable
             disabled={this.state.pressed}
@@ -43,8 +44,10 @@ export default class CPR_Start extends Component{
               },
               this.state.pressed?styles.appButtonDisabled:styles.appButtonContainer
             ]}
-            onPress={() =>  {this.setState({pressed:true})& test.push({event:'Hjärtkompresstioner',date :dateToString()})&
-            storeArray('Events',test)}}
+            onPress={async() =>  {this.setState({pressed:true})&
+            await storeArray('Events','Hjärtkompresstioner',dateToString(),test)
+                }
+            }
             
             
           >
@@ -55,8 +58,9 @@ export default class CPR_Start extends Component{
           <TouchableOpacity style = {styles.appButtonContainer2}
             
            
-            onPress={() => {this.setState({klar_flag:false})&this.props.navigation.navigate('Options')& test.push({event:'Analys',date :dateToString()})&
-            storeArray('Events',test)}}
+            onPress={async () => {this.setState({klar_flag:false}), this.state.pressed?this.props.navigation.navigate('Options')&//getNewArray().push({event:'Analys', date:dateToString()}),console.log(getNewArray())
+            await storeArray('Events','Analys',dateToString(),test):""
+          }}
             
             
           >
@@ -68,7 +72,7 @@ export default class CPR_Start extends Component{
 
         
           
-        </View>
+        </SafeAreaView>
         
         
         );

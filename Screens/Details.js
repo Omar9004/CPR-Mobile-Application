@@ -22,20 +22,28 @@ import {
     getData,
     getArray,
     DefaultContainer,
+    ArrayGenerator
   } from "../Functions/functionContainer";
-export default class Details extends Component{
- /* { test.map((item,index)=>(
-    <Text key={index} > {item["event"] +" "+ item["date"] } </Text>)
-    )}*/
+//import {getKeys} from './Options'
+export default class Details extends React.Component{
+  state ={s:[]}
+async componentDidMount(){
+  //let convert = getKeys()
+  
+ //console.log(convert[0])
+   this.setState({s:await getArray('Events',test)})
+   
+}
     render(){
       
+     
         return (
             <View  style={styles.Container}>
                 <View style={styles.bigTextArea}>
                 <ScrollView>
                   
                
-                { test.map((item,index)=>(
+                { this.state.s.map((item,index)=>(
                  <Text style={styles.textStyle} key={index} > {item["event"] +": "+ item["date"] } </Text>)
                  )}
                 </ScrollView>
@@ -43,7 +51,7 @@ export default class Details extends Component{
                 </View>
                 <View style={styles.Bottom_Button}>
                 <Pressable 
-                onPress={()=>{this.props.navigation.popToTop()}}
+                onPress={()=>{this.props.navigation.navigate('Home')}}
                 >
                       
                     <Text style={styles.appButtonText}>Avsluta </Text>

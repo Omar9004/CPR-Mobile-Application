@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Timer from '../Functions/Timer';
 import { getTime} from '../Functions/Timer';
 import { ThemeProvider } from '@react-navigation/native';
+import Alarm from '../Functions/Alarm';
 import {
   test,
   dateToString,
@@ -16,38 +17,65 @@ import {
   getArray,
   DefaultContainer,
 } from "../Functions/functionContainer";
-var times = 0;
-export default class Options extends Component {
-  navigationOptions = ({ navigation, navigationOptions }) => {
-    const { params } = navigation.state;
+import { NavigationActions,StackActions } from 'react-navigation';
+//import {getNewArray}from './Start';
 
-    return {
-      title: params ? params.otherParam : 'Options',
-      /* These values are used instead of the shared configuration! */
-      headerStyle: {
-        backgroundColor: navigationOptions.headerStyle.backgroundColor,
-      },
-      headerTintColor: navigationOptions.headerTintColor,
-    };
-  };
+
+var times = 0;
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [
+  NavigationActions.navigate({ routeName: 'Summary' }),
+],
+});
+var KeyList=[]
+export default class Options extends React.Component {
+ /*componentWillUnmount(){
+  let isFocused=this.props.navigation.isFocused()
+  // console.log(isFocused);
+ }*/
+ constructor(props){
+  super(props);
+  
+  this.state={
+      Stop:true,
+          
+  }
+}
+/*KeyGenerator=()=>{
+  let getDateKey=dateToString()
+  KeyList.push(getDateKey)
+  return(getDateKey)
+}*/
+  
+/*componentWillUnmount(){
+  console.log(this.state.Stop)
+}*/
 
 
   render() {
     times= getTime()
     times = JSON.parse(times)
+    console.log(this.state.Stop)
     return (
       
-      <View >
+      <SafeAreaView >
+        <View style={styles.time}>
+        <Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} ></Timer>
+        </View>
+        <View style={styles.AlarmTimer}>
+        <Alarm duration={1} sec={59}status={this.state.Stop}/>
+            </View>
         
-        <Timer  sec={times["sec"]} min={times["min"]} h={times["hh"]} >
-        
-        </Timer>
         
         <TouchableOpacity style={styles.appButtonContainer}
         
           title="VF/VT"
-          onPress={() => {this.props.navigation.navigate('VF_VT')& test.push({event:'VF/VT slingan',date :dateToString()})&
-          storeArray('Events',test)}}
+          onPress={() => {this.props.navigation.navigate('VF_VT')& //getNewArray().push({event:'VF/VT slingan', date:dateToString()})
+          
+          //test.push({event:'VF/VT slingan',date :dateToString()})&
+          storeArray('Events','VF/VT slingan',dateToString(),test)
+        }}
 
 
         >
@@ -57,8 +85,10 @@ export default class Options extends Component {
         <TouchableOpacity style={styles.appButtonContainer2}
 
 
-          onPress={() => {this.props.navigation.navigate('Asystoli')& test.push({event:'Asystoli slingan',date :dateToString()})&
-          storeArray('Events',test)}}
+          onPress={() => {this.props.navigation.navigate('Asystoli')& //getNewArray().push({event:'Asystoli slingan', date:dateToString()})
+          //test.push({event:'Asystoli slingan',date :dateToString()})&
+          storeArray('Events','Asystoli slingan',dateToString(),test)
+        }}
 
 
         >
@@ -68,7 +98,7 @@ export default class Options extends Component {
         <TouchableOpacity style = {styles.ButtonStyle2}
               
               title="Summary"
-              onPress={() => this.props.navigation.navigate('Summary')}
+              onPress={() => {this.setState({Stop:false})&this.props.navigation.dispatch(resetAction)}}
               
               
             >
@@ -83,7 +113,7 @@ export default class Options extends Component {
             onPress={() => Alert.alert("Alert","Vill du avsluta HLR?",
             [
               {text:'Avbryt',style:'cancel'},
-              {text:'Ok',onPress :()=>this.props.navigation.navigate('Summary')}
+              {text:'Ok',onPress :()=>{this.props.navigation.navigate('Summary'),this.props.navigation.dispatch(resetAction)}}
             ]
               )
             }
@@ -95,13 +125,17 @@ export default class Options extends Component {
           </TouchableOpacity>
 
 
-      </View>
+      </SafeAreaView>
 
 
     );
   }
 
 }
+/*export const getKeys=()=>{
+  return KeyList
+}*/
+
 
 const styles = StyleSheet.create({
   constainer: {
@@ -110,7 +144,7 @@ const styles = StyleSheet.create({
   },
   appButtonContainer: {
     position: 'absolute',
-    top: "80%",
+    top: "95%",
     left: 205,
     width: 150,
     height: 150,
@@ -146,14 +180,22 @@ const styles = StyleSheet.create({
     //alignSelf: "center"
   },
   Avslut_Button:{
-    top:"90%",
+    top:"100%",
     left: "30%",
-    width: 160,
+    width: 170,
     height: 50,
     borderRadius:10,
     backgroundColor:'red',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  time:{
+    top:260,
+    
+  },
+  AlarmTimer:{
+    top:"95%",
+    left:"38%"
   },
   appButtonContainer2: {
     top: "63%",

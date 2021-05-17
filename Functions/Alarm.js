@@ -19,7 +19,8 @@ class Alarm extends React.Component{
             super(props);
             this.state={
                 dur:this.props.duration,
-                sec:59,
+                sec:this.props.sec,
+                status:this.props.status,
             }
         }
         
@@ -27,7 +28,8 @@ class Alarm extends React.Component{
         
         
         timeDivider=()=>{
-            this.setState((prevState)=>({dur:prevState.dur-1}))
+            //this.setState((prevState)=>({dur:prevState.dur-1}))
+            if(this.state.status){
                     this.interval= setInterval(
                         (()=>{
                         if(this.state.dur>=1){
@@ -50,11 +52,11 @@ class Alarm extends React.Component{
 
                         }),1000);            
             
-                  
+                    }   
             
         }
         main=()=>{
-            if(this.state.sec>0 || this.state.dur>0){
+            if((this.state.sec>0 || this.state.dur>0)){
             if(this.state.dur<=0 && this.state.sec<=10 ){
                 return(
                   

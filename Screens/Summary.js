@@ -11,7 +11,7 @@ import {
   } from "../Functions/functionContainer";
 
 
-export default class Summary extends Component{
+export default class Summary extends React.Component{
   constructor(props){
     super(props);
       this.state={
