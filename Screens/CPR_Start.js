@@ -15,7 +15,7 @@ import {
 } from "../Functions/functionContainer";
 //import {getNewArray}from './Start'
 var parses = 0;
-export default class CPR_Start extends Component{
+export default class CPR_Start extends React.PureComponent{
   constructor(props){
     super(props);
       
@@ -38,14 +38,10 @@ export default class CPR_Start extends Component{
             <Pressable
             disabled={this.state.pressed}
             title="VF/VT"
-            style={({pressed}) => [
-              {
-                backgroundColor: pressed ? 'green' : 'blue',
-              },
-              this.state.pressed?styles.appButtonDisabled:styles.appButtonContainer
-            ]}
+            style={this.state.pressed?styles.appButtonDisabled:styles.appButtonContainer
+            }
             onPress={async() =>  {this.setState({pressed:true})&
-            await storeArray('Events','Hjärtkompresstioner',dateToString(),test)
+             storeArray('Events','Hjärtkompresstioner',dateToString(),test)
                 }
             }
             
@@ -59,7 +55,7 @@ export default class CPR_Start extends Component{
             
            
             onPress={async () => {this.setState({klar_flag:false}), this.state.pressed?this.props.navigation.navigate('Options')&//getNewArray().push({event:'Analys', date:dateToString()}),console.log(getNewArray())
-            await storeArray('Events','Analys',dateToString(),test):""
+             storeArray('Events','Analys',dateToString(),test):""
           }}
             
             
@@ -93,7 +89,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius:10,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor:'blue'
     },
     
     appButtonText: {

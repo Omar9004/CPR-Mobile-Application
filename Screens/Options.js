@@ -56,7 +56,6 @@ export default class Options extends React.Component {
   render() {
     times= getTime()
     times = JSON.parse(times)
-    console.log(this.state.Stop)
     return (
       
       <SafeAreaView >

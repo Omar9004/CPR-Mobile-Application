@@ -30,14 +30,20 @@ var Vf2Flag=false;
 var counterScreen= 0;
 var counter =0;
 var counterButton =0;
+var Cor_coutner=2;
 
 export const VF_VTResets=()=>{
+times=0;
+AlarmTime=0;
+Defib_Flag2=false;
 VfFlag=true;
 Vf1Flag=false;
 Vf2Flag=false;
 counterScreen= 0;
 counter =0;
 counterButton =0;
+Cor_coutner=2;
+
 }
 
 export default class VF_VT extends React.Component{
@@ -83,8 +89,9 @@ export default class VF_VT extends React.Component{
       
      }
      componentWillUnmount(){
-      counterButton =this.state.Button_Pressed
+      //counterButton =this.state.Button_Pressed
       Defib_Flag2=this.state.Defib_flag2;
+      let isFocused=this.props.navigation.isFocused();
       VfFlag=false
       Vf1Flag=true
       counterScreen++;
@@ -108,33 +115,36 @@ export default class VF_VT extends React.Component{
            
          }
      }
-    state_managment=async()=>{
+    state_managment=()=>{
       this.setState({Button_Pressed:this.state.Button_Pressed+1}), //Button counter 
-      this.setState({Button_Pressed:this.state.Button_Pressed+1}),
+      counterButton++;
       counter++;//Button counter for storing data
       this.setState({Button_Pressedf:true})                 
-      await storeData('Defib',counter)
-      await storeArray('Events','Defibrellering',dateToString(),test)
+       storeData('Defib',counter)
+       storeArray('Events','Defibrellering',dateToString(),test)
      // this.setState({Adrenalin:1})
     
-     if(this.state.Button_Pressed==3){
+     if(counterButton==3){
           this.setState({Ader_flag:false})
           this.setState({Cord_flag:false})
           this.setState({Adrenalin:1})
           this.setState({Cordarone:300})
           Alert.alert("Alert","Ge patienten mediciner")
       }
-      if(this.state.Button_Pressed==5){
+      if(counterButton==5){
         Vf1Flag=false
         Vf2Flag=true
+        this.setState({Button_Pressedf:true})  
         this.setState({Cord_flag:false})
         //this.setState({Cordarone:this.state.Cordarone+150})
       }
-      if(this.state.Button_Pressed>5){
-        this.setState({Add_Cordarone:this.state.Add_Cordarone-1})
-        if(this.state.Add_Cordarone==0){
+      if(counterButton>5){
+        //this.setState({Add_Cordarone:this.state.Add_Cordarone-1})
+        Cor_coutner--;
+        if(Cor_coutner==0){
           this.setState({Cord_flag:false})
-          this.setState({Add_Cordarone:2})
+          //this.setState({Add_Cordarone:2})
+          Cor_coutner=2;
         }
       }
           
@@ -145,7 +155,6 @@ export default class VF_VT extends React.Component{
     if(!this.state.Cord_flag){
       
     this.setState({Cordarone:300})}
-    console.log(this.state.Cordarone) 
    }
    
 
@@ -167,13 +176,14 @@ export default class VF_VT extends React.Component{
     }
    
   
-    main=()=>{
+    main=()=>{ //This functions controls the component that will be rendered on the screen
     
-     if(VfFlag ||!Defib_Flag2){
+     if(VfFlag &&!Vf1Flag){
+      
       return(this.VF());
 
      }
-     if(Vf1Flag&&Defib_Flag2){
+     if(Vf1Flag&&!Vf2Flag){
       return(
       
       this.VF1()
@@ -190,8 +200,8 @@ export default class VF_VT extends React.Component{
                <SafeAreaView >
                <Pressable 
                     title='Defibrillera' disabled={this.state.Defib_flag2} 
-                    onPress={async() => {this.setState({Defib_flag2:true}),await storeData('Defib',this.state.Defib1),//test.push({event:'Defibrellering',date :dateToString()}),counter++,
-                    await storeArray('Events','Defibrellering',dateToString(),test)}}
+                    onPress={() => {this.setState({Defib_flag2:true}), storeData('Defib',this.state.Defib1),//test.push({event:'Defibrellering',date :dateToString()}),counter++,
+                     storeArray('Events','Defibrellering',dateToString(),test)}}
                     style={this.state.Defib_flag2?styles.Defib_Disabled_Button2:styles.Defib_Button2}
                     >
                     <Text style={styles.appButtonText}> Defibrillera patient</Text>
@@ -224,7 +234,7 @@ export default class VF_VT extends React.Component{
       <SafeAreaView >
        <Pressable 
             title='Klar' disabled={this.state.Button_Pressedf} 
-            onPress={async() => {await this.state_managment()}}
+            onPress={() => { this.state_managment()}}
             style={this.state.Button_Pressedf?styles.Defib_Button_Disable:styles.Defib_Button}
             >
             <Text style={styles.appButtonText}>{this.state.Button_Pressed}x defibrillering </Text>
@@ -236,8 +246,8 @@ export default class VF_VT extends React.Component{
             
             
             <Pressable style={this.state.Ader_flag?styles.appButtonDisabled2:styles.Adrenalin_Button} disabled={this.state.Ader_flag} title='Försätt HLR'
-            onPress={async()=>{this.Medcin_State(),await storeData('Adren',this.state.Adrenalin),//test.push({event:'1mg Adrenaline',date :dateToString()})
-            await storeArray('Events','1mg Adrenaline',dateToString(),test),this.setState({Ader_flag:true}) }}
+            onPress={()=>{this.Medcin_State(), storeData('Adren',this.state.Adrenalin),//test.push({event:'1mg Adrenaline',date :dateToString()})
+             storeArray('Events','1mg Adrenaline',dateToString(),test),this.setState({Ader_flag:true}) }}
             >
             <Text style={styles.appButtonText}>1mg Adrenalin</Text>
             
@@ -245,8 +255,8 @@ export default class VF_VT extends React.Component{
             
             
             <Pressable disabled={this.state.Cord_flag} style={this.state.Cord_flag?styles.appButtonDisabled:styles. Cordarone_Button}
-               title='Cordarone' onPress={async()=> {this.Medcin_State(),await storeData('Cord',this.state.Cordarone),//test.push({event:'300mg Cordarone',date :dateToString()})
-               await storeArray('Events','300mg Cordarone',dateToString(),test),this.setState({Cord_flag:true})}}>
+               title='Cordarone' onPress={async()=> {this.Medcin_State(), storeData('Cord',this.state.Cordarone),//test.push({event:'300mg Cordarone',date :dateToString()})
+                storeArray('Events','300mg Cordarone',dateToString(),test),this.setState({Cord_flag:true})}}>
               <Text style={styles.appButtonText}>Ge 300 mg Cordarone</Text>
               </Pressable>
              
@@ -261,15 +271,8 @@ export default class VF_VT extends React.Component{
           
             <Pressable 
             title='Klar' disabled={this.state.Button_Pressedf} 
-            onPress={async() => {await this.state_managment()}}
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed
-                  ? 'green'
-                  : 'blue'
-              },
-              styles.Defib_Button
-            ]}
+            onPress={() => { this.state_managment()}}
+            style={ this.state.Button_Pressedf?styles.Defib_Button_Disable:styles.Defib_Button}
             >
             <Text style={styles.appButtonText}>{this.state.Button_Pressed}x defibrillering </Text>
             </Pressable>
@@ -279,7 +282,7 @@ export default class VF_VT extends React.Component{
 
               <Pressable disabled={this.state.Cord_flag} style={this.state.Cord_flag?styles.appButtonDisabled:styles. Cordarone_Button}
                title='Cordarone' onPress={async()=> {this.setState({Cordarone:this.state.Cordarone+150}),//test.push({event:'150mg Cordarone',date :dateToString()})
-               await storeArray('Events','150mg Cordarone',dateToString(),test),await storeData('Cord',this.state.Cordarone),this.setState({Cord_flag:true})}}>
+                storeArray('Events','150mg Cordarone',dateToString(),test), storeData('Cord',this.state.Cordarone),this.setState({Cord_flag:true})}}>
               <Text style={styles.appButtonText}>Ge 150 mg Cordarone</Text>
               </Pressable>
               </SafeAreaView>
