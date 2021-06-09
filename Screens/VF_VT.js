@@ -75,12 +75,7 @@ export default class VF_VT extends Component{
       };
     }
     componentDidMount(){
-     /* let isFocused=this.props.navigation.isFocused();
-      if(isFocused){
-        this.setState({Button_Pressedf:false})
-        this.setState({Button_Pressed:counter})
-        
-      }*/
+   
       this.setState({Button_Pressed:counterButton})
      
       this.interval=setInterval(()=> {getAlarmTime()},1000);
@@ -90,7 +85,7 @@ export default class VF_VT extends Component{
      }
      
      componentWillUnmount(){
-      //counterButton =this.state.Button_Pressed
+      
       Defib_Flag2=this.state.Defib_flag2;
       let isFocused=this.props.navigation.isFocused();
       VfFlag=false
@@ -120,12 +115,11 @@ export default class VF_VT extends Component{
     state_managment=()=>{
       this.setState({Button_Pressed:this.state.Button_Pressed+1}), //Button counter 
       counterButton++;
-      counter++;//Button counter for storing data
+      counter++;
       this.setState({Button_Pressedf:true})                 
        storeData('Defib',counter)
        storeArray('Events','Defibrellering',dateToString(),test)
-     // this.setState({Adrenalin:1})
-    
+   
      if(counterButton==3){
           this.setState({Ader_flag:false})
           this.setState({Cord_flag:false})
@@ -138,14 +132,14 @@ export default class VF_VT extends Component{
         Vf2Flag=true
         this.setState({Button_Pressedf:true})  
         this.setState({Cord_flag:false})
-        //this.setState({Cordarone:this.state.Cordarone+150})
+       
       }
       if(counterButton>5){
-        //this.setState({Add_Cordarone:this.state.Add_Cordarone-1})
+       
         Cor_coutner--;
         if(Cor_coutner==0){
           this.setState({Cord_flag:false})
-          //this.setState({Add_Cordarone:2})
+          
           Cor_coutner=2;
         }
       }
