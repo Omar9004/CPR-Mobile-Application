@@ -6,6 +6,8 @@ import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
 import {getAlarmTime} from '../Functions/Alarm';
 import Timer from '../Functions/Timer';
+import {get_Adrenaline,set_Adrenaline} from '../Functions/Timer';
+
 import {getTime} from '../Functions/Timer';
 import {
   text,
@@ -23,25 +25,31 @@ import {
 var counter=0;
 var Adren_counter=0;
 var AlarmTime;
+var flag1;
+var times;
 export default class Asystoli extends React.Component{
 
 
   constructor(props){
          super(props);
+         flag1=true;
            this.state={
            
            text:'Ge 1mg adrenalin',
            Adren:0,
            flag:true,
-           flag2:true,
+           flag2:false,
            textStoring:"",
            modal_flag:false,
+           stop:true,
            counter:118
            };
          }
   componentDidMount(){
-   this.interval=setInterval(()=> {this.setState({counter:this.state.counter-1}),getAlarmTime()},1000);
-   this.state_manager()
+   this.interval=setInterval(()=> {getAlarmTime(), this.state_manager1()},1000);
+  
+
+   
   // this.instractions('10 Sekunder kvar till att göra analysen')
   }
   componentWillUnmount(){
@@ -52,69 +60,126 @@ export default class Asystoli extends React.Component{
     clearInterval(this.interval);
     
   }
-  instractions =()=>{
-      let al = JSON.parse(getAlarmTime())
+  instractions =(text)=>{
+      /*let al = JSON.parse(getAlarmTime())
       if(al["sec"]<11&&al["min"]==0){
-        Flag_ana=false;
+        //Flag_ana=false;
+        this.setState({coutner:this.state.counter-1})
         clearInterval(this.interval)
+        
         
         return(<TextInput style={styles.textarea_style} multiline={true} editable={false}> 10 Sekunder kvar till att göra analysen{"\n"} 
         </TextInput>)
         
       }
-     else{
+     else{*/
         
-        return(<TextInput style={styles.textarea_style} multiline={true} editable={false}> {this.state.text}{"\n"} 
-        </TextInput>)
+        return(<Text style={styles.textarea_style} multiline={true}> {this.state.text}{"\n"} 
+        </Text>)
         
+      //}
+  }
+  Alarm_Func=()=>{
+    let al = JSON.parse(getAlarmTime())
+   if(al["min"]==0&& al["sec"]<=0){
+     clearInterval(this.interval);
+     return(<Alarm duration ={al["min"]} sec={al["sec"]}status={false}/>)
+   }else{
+     if(al["min"]==0&& al["sec"]<=10){
+     return(<Alarm duration ={al["min"]} sec={al["sec"]} status={true} status1={false} />)
+   }else{
+    return(<Alarm duration ={al["min"]} sec={al["sec"]}status={true} status1={true}/>)
       }
+    }
+  }
+  AlertButton=()=>{
+    Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        {
+          text: "Avbryt",
+          style: "cancel"
+        },
+        
+        { text: "OK", 
+          onPress: () => {this.props.navigation.navigate('CPR_Start')}}
+      ]
+    );
   }
   Adrenaline_State=()=>{
-   return( this.setState({flag2:true}),Adren_counter=Adren_counter+1)}
+   return( this.setState({flag2:true}))}
+
+   state_manager1=()=>{
+    let al = JSON.parse(getAlarmTime())
+    
+    if(al["min"]==0 && al["sec"]<11){
+      this.setState({text:"10 Sekunder kvar till analysen"})
+      //this.setState({flag2:true})
+      
+      clearInterval(this.interval);
+      
+    }
+    
+   }
   
   state_manager=()=>{
-    
-    if(counter%2 ===0){
+    let times1 =JSON.parse(getTime());
+    let al = JSON.parse(getAlarmTime())
+    if(al["min"]==0 && al["sec"]<4){
+      this.setState({flag2:false})
+      clearInterval(this.interval);
+      
+    }else{
+     if (times1["min"]%1==0&times1["min"]!=0&times1["sec"]===0){
+      this.setState({flag:false})
+      this.setState({flag2:false})
+      }
+    }
+    /*if(counter%2 ===0){
       this.setState({flag:false})
       this.setState({flag2:false})
     }else{
       this.setState({flag2:false})
       this.setState({text:'Ge 1mg Adrenalin var 4:e minut'})
-    }
+      disabled={this.state.flag===this.state.flag2?false:true} style={this.state.flag2||this.state.flag?styles.Adren_Disabled:styles.appButtonContainer}
+    }*/
   }
-   Storing_Data=async()=>{
-    await storeData('Adren_Asys',Adren_counter)
-    //test.push({event:'1mg Adrenaline',date :dateToString()})
-    await storeArray('Events','1mg Adrenaline',dateToString(),test)
+   Storing_Data=()=>{
+    Adren_counter =get_Adrenaline()
+    console.log(Adren_counter)
+    set_Adrenaline(++Adren_counter)
+     storeData('Adren',get_Adrenaline())
+    //test.push({evenmt:'1mg Adrenaline',date :dateToString()})
+     storeArray('Events','1mg Adrenaline',dateToString(),test)
   }
 
          
     render(){
-      let times = getTime();
+      times = getTime();
       times = JSON.parse(times);
+    
 
       AlarmTime=getAlarmTime();
-      AlarmTime=JSON.parse(AlarmTime);
+      AlarmTime=JSON.parse(AlarmTime);      
       return( 
              <View style={styles.constainer}>
                
-             <Timer sec={times["sec"]} min={times["min"]} h={times["hh"]}/>
+             <Timer sec={times["sec"]} min={times["min"]} h={times["hh"]} Adren_Alert={true}/>
              {this.instractions()}
             
              <View style ={styles.timerView}>
-             <Alarm duration ={AlarmTime["min"]} sec={AlarmTime["sec"]}status={true}/>
+            {this.Alarm_Func()}
              </View>
-             <TouchableOpacity disabled={this.state.flag===this.state.flag2?false:true} style={this.state.flag2||this.state.flag?styles.Adren_Disabled:styles.appButtonContainer}title='Adrenaline' onPress={async()=> {this.Adrenaline_State(),this.Storing_Data()}}>
+             <TouchableOpacity disabled={this.state.flag2} style={this.state.flag2?styles.Adren_Disabled:styles.appButtonContainer} onPress={()=> {this.Adrenaline_State(),this.Storing_Data()}}>
             
              <Text style={styles.appButtonText}>Ge 1mg adrenalin</Text>
              
              </TouchableOpacity>
-             <TouchableOpacity style={styles.appButtonContainer2} title='Analys' 
-            onPress={() => this.props.navigation.navigate('CPR_Start')}
-            >
-             <Text style={styles.appButtonText}>Till Analysen</Text>
-             
-             </TouchableOpacity>
+             <TouchableOpacity style={styles.appButtonContainer2}
+          onPress={()=> {this.AlertButton()}}> 
+          <Text style={styles.appButtonText}>Till Analysen</Text>
+          </TouchableOpacity>
           <Modal
           animationType="slide"
           transparent={true}
@@ -128,8 +193,8 @@ export default class Asystoli extends React.Component{
               <TextInput style={styles.modalText}  blurOnSubmit={true} autoCorrect={true} multiline={true} onChangeText={(text)=>{this.setState({textStoring:text})}}> </TextInput>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={async() => {this.setState({modal_flag:!this.state.modal_flag}),//text.push({event:this.state.textStoring,date :dateToString_Clock()})
-                this.state.textStoring!==""?await storeArray('Text',this.state.textStoring,dateToString_Clock(),text):""}}
+                onPress={() => {this.setState({modal_flag:!this.state.modal_flag}),//text.push({event:this.state.textStoring,date :dateToString_Clock()})
+                this.state.textStoring!==""? storeArray('Text',this.state.textStoring,dateToString_Clock(),text):""}}
               >
                 
                 <Text style={styles.textStyle}>{this.state.textStoring===''?'Stäng':'Spara'}</Text>
@@ -198,12 +263,20 @@ export default class Asystoli extends React.Component{
            
        },
        timerView:{
-         position: 'absolute',
-         top: 0,
-         left: 140,
-         width: 100,
-         height: 100,
-         borderRadius: 100,
+         //position: 'absolute',
+         
+          // position: 'absolute',
+        top: "0%",
+        left: "40%",
+        right:0,
+        bottom:0,
+        width: 88,
+        height: 50, 
+        borderRadius: 10,
+        backgroundColor:'#004dcf',
+        justifyContent: "center",
+         
+     
        },
        textarea_style:{
            fontSize:20,
