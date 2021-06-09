@@ -21,6 +21,7 @@ class Alarm extends React.Component{
                 dur:this.props.duration,
                 sec:this.props.sec,
                 status:this.props.status,
+                status1:this.props.status1, //to prevent object sound issue and app crashing
             }
         }
         
@@ -30,6 +31,7 @@ class Alarm extends React.Component{
         timeDivider=()=>{
             //this.setState((prevState)=>({dur:prevState.dur-1}))
             if(this.state.status){
+                console.log(this.state.status)
                     this.interval= setInterval(
                         (()=>{
                         if(this.state.dur>=1){
@@ -56,7 +58,7 @@ class Alarm extends React.Component{
             
         }
         main=()=>{
-            if((this.state.sec>0 || this.state.dur>0)){
+            if(((this.state.sec>0 || this.state.dur>0))){
             if(this.state.dur<=0 && this.state.sec<=10 ){
                 return(
                   
@@ -82,7 +84,8 @@ class Alarm extends React.Component{
                 )
                         
                 }
-            }else{return(
+            }else{if(this.state.status){return(
+                
                 <View style={styles.timerAlarm}> 
                         
                         <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
@@ -90,13 +93,19 @@ class Alarm extends React.Component{
 
                         </View>
             )
-             }
-            
+             }else{return(<View style={styles.timerAlarm}> 
+                       
+                <Text style={styles.textStyle}>0{this.state.dur}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
+                
+
+                </View>)}
+            }
             }
 
         
 
         async componentDidMount(){
+           
             this.timeDivider()
             Animated.loop(
                 Animated.sequence([
@@ -123,15 +132,16 @@ class Alarm extends React.Component{
                 shouldDuckAndroid:true,
                 playThroughEarpieceAndroid:true
             });
+            
             this.sound = new Audio.Sound();
-            const status={
-                shouldPlay: false
-            };
+            const status={shouldPlay: false};
             this.sound.loadAsync( require('./censor-beep-6.mp3'),status,false);
+            
          }
 
          playSound(){
-            this.sound.playAsync();
+            if(this.state.status1){
+            this.sound.playAsync();}
           }
             
         
@@ -160,7 +170,7 @@ export function getAlarmTime(){
 
 
 const styles = StyleSheet.create({
-    container: {
+    /*container: {
       flex: 1,
       alignItems: "center",
       justifyContent: "center"
@@ -203,22 +213,8 @@ const styles = StyleSheet.create({
         backgroundColor:'#004dcf',
         justifyContent: "center",
       },
-      timerAlarm:{
-        position: 'absolute',
-        top: 100,
-        left: 5,
-        width: 88,
-        height: 50,
-        borderRadius: 10,
-        justifyContent: "center",
-        
-        backgroundColor:'#eb142d'
-      },
-      textStyle:{
-          fontSize:28,
-          fontWeight:'bold',
-          textAlign:'center',
-      },appButtonContainer2:{
+      
+      appButtonContainer2:{
         top: -0,
         left: 20,
         width: 150,
@@ -237,7 +233,35 @@ const styles = StyleSheet.create({
         width: 200,
         height: 6, 
         color:"blue",
-    }
+    }*/
+    /*timerView:{
+        //position: 'absolute',
+        top: "400%",
+      left: "35%",
+        right:0,
+        bottom:0,
+        width: 88,
+        height: 50, 
+        borderRadius: 10,
+        backgroundColor:'#004dcf',
+        justifyContent: "center",
+      },*/
+    timerAlarm:{
+        //position: 'absolute',
+        top: "0%",
+        left: "0%",
+        width: 88,
+        height: 50,
+        borderRadius: 10,
+        justifyContent: "center",
+        
+        backgroundColor:'#eb142d'
+      },
+    textStyle:{
+        fontSize:28,
+        fontWeight:'bold',
+        textAlign:'center',
+    },
   });
   
 

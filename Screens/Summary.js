@@ -10,7 +10,7 @@ import {
     DefaultContainer,
   } from "../Functions/functionContainer";
 
-
+var times=0;
 export default class Summary extends React.Component{
   constructor(props){
     super(props);
@@ -26,7 +26,8 @@ export default class Summary extends React.Component{
     }
 
    get =async()=>{
-    this.setState({Defib:await getData('Defib')})
+    times = JSON.parse(await getData('Time'))
+    nthis.setState({Defib:await getData('Defib')})
     this.setState({Defib1:await getData('Defib1')})
     if(this.state.Defib!=undefined&&this.state.Defib1!=undefined){
       let Defib_tot=JSON.parse(this.state.Defib1)+JSON.parse(this.state.Defib)
@@ -67,11 +68,13 @@ export default class Summary extends React.Component{
             <View style={styles.Container}>
                 
                 <Text style={styles.ButtonStyle}>
-                    Defibrilation: {this.state.DefibTot} {"\n"}
+                      Tid: 0{times['hh']}:{times['min']<10?'0'+times['min']:times['min']}:{times['sec']<10?'0'+times['sec']:times['sec']}{"\n"}
+                      Defibrilation: {this.state.DefibTot} {"\n"}
             
-                    Adernalin: {this.state.Adren_tot} mg{"\n"}
+                      Adernalin: {this.state.Adren_tot} mg{"\n"}
                 
-                    Cordarone:{this.state.Cord} mg {"\n"}
+                      Cordarone:{this.state.Cord} mg {"\n"}
+                    
                 </Text>
                 <View style={styles.Bottom_Button}>
                 <Pressable 
@@ -81,14 +84,7 @@ export default class Summary extends React.Component{
                     <Text style={styles.appButtonText}>Detaljer </Text>
                 </Pressable>
                 </View>
-                <View style={styles.Bottom_Button2}>
-                <Pressable 
-                onPress={()=>{this.props.navigation.goBack()}}
-                >
-                      
-                    <Text style={styles.appButtonText2}>Stäng </Text>
-                </Pressable>
-                </View>
+               
             </View>
         )
 

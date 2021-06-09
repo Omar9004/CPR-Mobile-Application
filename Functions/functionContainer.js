@@ -52,9 +52,9 @@ export const dateToString_Clock = () => {
 
 export const storeData = async (key, saveText) => {
   try {
+    
     let value= JSON.stringify(saveText)
     await AsyncStorage.setItem(key, value);
-    
   } catch (e) {
     console.log("hello");
   }
@@ -63,6 +63,7 @@ export const storeData = async (key, saveText) => {
 export const getData = async (key) => {
   try {
     const value = await AsyncStorage.getItem(key);
+    //console.log(JSON.parse(value))
     if (value !== null) {
       //functionCallback(value);
      return value

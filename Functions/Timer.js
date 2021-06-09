@@ -3,8 +3,11 @@ import React, { Component, useState,useEffect } from 'react';
 import {Animated,View, Text, StyleSheet, TouchableOpacity, Alert,Vibration, TouchableHighlightBase} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { color } from 'react-native-reanimated';
+import {storeArray,test,storeData,dateToString}from "./functionContainer"
 var time=0;
-class Timer extends React.Component{
+var Adren_Qun=0;
+var quntity=0; 
+class Timer extends React.PureComponent{
    
         constructor(props){
             super(props);
@@ -13,6 +16,8 @@ class Timer extends React.Component{
                 sec:this.props.sec,
                 min:this.props.min,
                 h:this.props.h,
+                Adrenalin:this.props.Adren_Alert,
+                Medicine:0
                 
             }
         }
@@ -41,17 +46,46 @@ class Timer extends React.Component{
                           const seconds = this.state.sec >=59 ? this.setState({sec:this.state.sec=0}): this.setState({sec:this.state.sec+1})
                           const minutes =  this.state.sec ==0 ?this.setState({min:this.state.min+1}): this.setState({min:((this.state.min>59?this.state({min:this.state.min=0}):this.state.min))})
                           const hours = (this.state.min==0)&&(this.state.sec==0) ?this.setState({h:this.state.h+1}): this.setState({h:this.state.h})
-                          
+                          if(this.state.Adrenalin){this.Adrenaline_Time()}
                         }),1000);            
             
       
 
             
         }
+        StoreData=()=>{
+          quntity=get_Adrenaline();
+          set_Adrenaline(++quntity)
+          storeArray('Events','1mg Adrenaline',dateToString(),test),
+          storeData('Adren',get_Adrenaline())
+        }
+        Adrenaline_Time=()=>{
+          if(this.state.min!=0 &&this.state.min%4==0 &&this.state.sec===0){
+            Vibration.vibrate(1000,true)
+              Alert.alert(
+                "Alert Title",
+                "My Alert Msg",
+                [
+                  {
+                    text: "Avbryt",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                  },
+                  
+                  { text: "Ge 1mg Adrenalin", 
+                    onPress: () => {this.StoreData(),Vibration.cancel()}},
+                    
+                ]
+              );
+              
+          }
+        }
         main=()=>{
             return(
                 <View style = {styles.timerView}>
+                  
                         <Text style={styles.textStyle}> {this.state.h<10?'0'+this.state.h:this.state.h}:{this.state.min<10?'0'+this.state.min:this.state.min}:{this.state.sec<10?'0'+this.state.sec:this.state.sec}</Text>
+                       
                 </View>
             )
            
@@ -84,8 +118,14 @@ class Timer extends React.Component{
 export function  getTime(){
   return JSON.stringify(time);
 }
+export function get_Adrenaline(){
+  return Adren_Qun;
+}
+export function set_Adrenaline(Qun){
+  Adren_Qun = Qun;
+}
 
-
+export default Timer;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -162,4 +202,4 @@ const styles = StyleSheet.create({
   
   
 
-export default Timer;
+

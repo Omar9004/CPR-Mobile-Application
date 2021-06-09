@@ -1,6 +1,6 @@
-import React, { Component, useState,useEffect } from 'react';
+import React from 'react';
 import 'react-native-gesture-handler';
-import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextInput } from 'react-native';
+import {StyleSheet } from 'react-native';
 
 import Start from './Screens/Start';
 import Options from './Screens/Options';
@@ -72,10 +72,6 @@ const SummaryStack = createStackNavigator({
     screen:Notes,
   },
   
-},{
-  defaultNavigationOptions: {
-  headerShown:false,
-  gestureEnabled:false,}
 });
 const AppNavigator = createStackNavigator({
   Home:{

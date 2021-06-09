@@ -4,6 +4,7 @@ import { Alert, StyleSheet,TouchableOpacity, Text, View, Touchable,Button, TextI
 import {createAppContainer}from 'react-navigation';
 import {createStackNavigator}from 'react-navigation-stack';
 import Alarm from '../Functions/Alarm';
+import {set_Adrenaline} from '../Functions/Timer'
 import {
   test,
   dateToString,
@@ -23,7 +24,8 @@ export default class Start extends React.Component{
 
   constructor(props){
     super(props);
-    
+    set_Adrenaline(0)
+    VF_VTResets()
       this.state={
       Duration:1,
       

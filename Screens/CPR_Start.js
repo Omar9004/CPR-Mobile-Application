@@ -15,6 +15,7 @@ import {
 } from "../Functions/functionContainer";
 //import {getNewArray}from './Start'
 var parses = 0;
+var counter =0;
 export default class CPR_Start extends React.PureComponent{
   constructor(props){
     super(props);
@@ -30,17 +31,17 @@ export default class CPR_Start extends React.PureComponent{
 
   
     render(){
-   
+     
         return(
             
             <SafeAreaView style={styles.constainer}>
            <Timer sec={0} min={0} h={0}/>
-            <Pressable
-            disabled={this.state.pressed}
+            <TouchableOpacity
+            //disabled={this.state.pressed}
             title="VF/VT"
-            style={this.state.pressed?styles.appButtonDisabled:styles.appButtonContainer
+            style={styles.appButtonContainer
             }
-            onPress={async() =>  {this.setState({pressed:true})&
+            onPress={() =>  {this.setState({pressed:true})&
              storeArray('Events','Hjärtkompresstioner',dateToString(),test)
                 }
             }
@@ -49,13 +50,13 @@ export default class CPR_Start extends React.PureComponent{
           >
              <Text style={styles.appButtonText}>              PÅBÖRJA {"\n"}
               HJÄRTKOMPRESSIONER</Text>
-          </Pressable>
+          </TouchableOpacity>
           
           <TouchableOpacity style = {styles.appButtonContainer2}
             
            
-            onPress={async () => {this.setState({klar_flag:false}), this.state.pressed?this.props.navigation.navigate('Options')&//getNewArray().push({event:'Analys', date:dateToString()}),console.log(getNewArray())
-             storeArray('Events','Analys',dateToString(),test):""
+            onPress={ () => {this.setState({klar_flag:false}), this.props.navigation.navigate('Options')&//getNewArray().push({event:'Analys', date:dateToString()}),console.log(getNewArray())
+             storeArray('Events','Analys',dateToString(),test)
           }}
             
             
